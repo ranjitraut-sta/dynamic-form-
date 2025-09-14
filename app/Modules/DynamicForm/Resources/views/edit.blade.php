@@ -104,6 +104,54 @@
     top: 5px;
     right: 5px;
 }
+.form-field {
+    cursor: grab;
+    transition: all 0.2s ease;
+}
+.form-field:active {
+    cursor: grabbing;
+}
+.form-field:hover {
+    border-color: #007bff;
+    box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+    transform: translateY(-2px);
+}
+.form-field.dragging {
+    opacity: 0.6;
+    transform: rotate(3deg) scale(1.02);
+    z-index: 1000;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+.drag-handle {
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: grab;
+    color: #6c757d;
+    font-size: 18px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+.form-field:hover .drag-handle {
+    opacity: 1;
+}
+.drop-indicator {
+    height: 3px;
+    background: #007bff;
+    margin: 5px 0;
+    border-radius: 2px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+.drop-indicator.active {
+    opacity: 1;
+    animation: pulse 1s infinite;
+}
+@keyframes pulse {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(1.5); }
+}
 .drop-zone {
     border: 2px dashed #ddd;
     background: #fafafa;
@@ -130,10 +178,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function loadExistingFields() {
     if (formFields && formFields.length > 0) {
-        formFields.forEach(field => {
-            renderField(field);
-        });
+        refreshFormBuilder();
         fieldCounter = formFields.length;
+        // Setup drag and drop for existing fields
+        setTimeout(() => {
+            setupFieldDragDrop();
+        }, 100);
     }
 }
 
@@ -144,6 +194,7 @@ function setupDragDrop() {
     fieldItems.forEach(item => {
         item.addEventListener('dragstart', function(e) {
             e.dataTransfer.setData('text/plain', this.dataset.type);
+            e.dataTransfer.setData('drag-source', 'palette');
         });
     });
     
@@ -159,8 +210,16 @@ function setupDragDrop() {
     dropZone.addEventListener('drop', function(e) {
         e.preventDefault();
         this.classList.remove('drag-over');
-        const fieldType = e.dataTransfer.getData('text/plain');
-        addField(fieldType);
+        
+        const dragSource = e.dataTransfer.getData('drag-source');
+        
+        // Only add new field if dragged from palette
+        if (dragSource === 'palette') {
+            const fieldType = e.dataTransfer.getData('text/plain');
+            if (fieldType) {
+                addField(fieldType);
+            }
+        }
     });
 }
 
@@ -192,21 +251,26 @@ function addField(type) {
     };
 
     formFields.push(field);
-    renderField(field);
     
-    // Clear placeholder text
+    // Clear placeholder text and refresh
     const dropZone = document.getElementById('formFields');
     const placeholder = dropZone.querySelector('h5');
     if (placeholder) placeholder.remove();
+    
+    refreshFormBuilder();
 }
 
 function renderField(field) {
     const formFieldsArea = document.getElementById('formFields');
     const fieldHtml = `
-        <div class="form-field" data-field-id="${field.id}">
+        <div class="drop-indicator"></div>
+        <div class="form-field" data-field-id="${field.id}" draggable="true">
+            <div class="drag-handle">⋮⋮</div>
             <div class="field-controls">
-                <button type="button" class="btn btn-sm btn-warning" onclick="editField('${field.id}')">⚙️</button>
-                <button type="button" class="btn btn-sm btn-danger" onclick="removeField('${field.id}')">🗑️</button>
+                <button type="button" class="btn btn-sm btn-secondary" onclick="moveFieldUp('${field.id}')" title="Move Up">⬆️</button>
+                <button type="button" class="btn btn-sm btn-secondary" onclick="moveFieldDown('${field.id}')" title="Move Down">⬇️</button>
+                <button type="button" class="btn btn-sm btn-warning" onclick="editField('${field.id}')" title="Edit">⚙️</button>
+                <button type="button" class="btn btn-sm btn-danger" onclick="removeField('${field.id}')" title="Remove">🗑️</button>
             </div>
             <div class="form-group">
                 <label><strong>${field.label} ${field.required ? '*' : ''}</strong></label>
@@ -273,14 +337,100 @@ function editField(fieldId) {
     }
 }
 
+function setupFieldDragDrop() {
+    const formFields = document.querySelectorAll('.form-field');
+    const dropIndicators = document.querySelectorAll('.drop-indicator');
+    
+    formFields.forEach(field => {
+        field.addEventListener('dragstart', function(e) {
+            e.dataTransfer.setData('application/json', JSON.stringify({type: 'reorder', fieldId: this.dataset.fieldId}));
+            e.dataTransfer.setData('drag-source', 'existing-field');
+            this.classList.add('dragging');
+        });
+        
+        field.addEventListener('dragend', function(e) {
+            this.classList.remove('dragging');
+            dropIndicators.forEach(indicator => indicator.classList.remove('active'));
+        });
+    });
+    
+    dropIndicators.forEach((indicator, index) => {
+        indicator.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('active');
+        });
+        
+        indicator.addEventListener('dragleave', function(e) {
+            this.classList.remove('active');
+        });
+        
+        indicator.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('active');
+            
+            const dragSource = e.dataTransfer.getData('drag-source');
+            
+            if (dragSource === 'existing-field') {
+                const data = JSON.parse(e.dataTransfer.getData('application/json') || '{}');
+                if (data.type === 'reorder') {
+                    reorderField(data.fieldId, index);
+                }
+            }
+        });
+    });
+}
+
+function moveFieldUp(fieldId) {
+    const fieldIndex = formFields.findIndex(f => f.id === fieldId);
+    if (fieldIndex > 0) {
+        [formFields[fieldIndex], formFields[fieldIndex - 1]] = [formFields[fieldIndex - 1], formFields[fieldIndex]];
+        refreshFormBuilder();
+    }
+}
+
+function moveFieldDown(fieldId) {
+    const fieldIndex = formFields.findIndex(f => f.id === fieldId);
+    if (fieldIndex < formFields.length - 1) {
+        [formFields[fieldIndex], formFields[fieldIndex + 1]] = [formFields[fieldIndex + 1], formFields[fieldIndex]];
+        refreshFormBuilder();
+    }
+}
+
+function reorderField(fieldId, newPosition) {
+    const fieldIndex = formFields.findIndex(f => f.id === fieldId);
+    if (fieldIndex !== -1) {
+        const field = formFields.splice(fieldIndex, 1)[0];
+        formFields.splice(newPosition, 0, field);
+        refreshFormBuilder();
+    }
+}
+
+function refreshFormBuilder() {
+    const formFieldsArea = document.getElementById('formFields');
+    formFieldsArea.innerHTML = '';
+    
+    if (formFields.length === 0) {
+        formFieldsArea.innerHTML = '<h5 class="text-muted">Drag fields here to build your form</h5>';
+        return;
+    }
+    
+    formFields.forEach(field => {
+        renderField(field);
+    });
+    
+    // Add final drop indicator
+    formFieldsArea.insertAdjacentHTML('beforeend', '<div class="drop-indicator"></div>');
+    
+    // Setup drag and drop for all fields
+    setTimeout(() => {
+        setupFieldDragDrop();
+    }, 50);
+}
+
 function removeField(fieldId) {
     if (confirm('Remove this field?')) {
         formFields = formFields.filter(f => f.id !== fieldId);
-        document.querySelector(`[data-field-id="${fieldId}"]`).remove();
-        
-        if (formFields.length === 0) {
-            document.getElementById('formFields').innerHTML = '<h5 class="text-muted">Drag fields here to build your form</h5>';
-        }
+        refreshFormBuilder();
     }
 }
 

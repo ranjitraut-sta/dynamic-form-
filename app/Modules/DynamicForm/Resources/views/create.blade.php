@@ -39,37 +39,13 @@
 
                             <div class="col-md-4 border-left">
                                 <h5 class="mb-3 font-weight-bold text-dark">Available Fields</h5>
-                                <div class="field-palette card shadow-sm p-3">
-                                    <div class="field-item" draggable="true" data-type="text">
-                                        <i class="fas fa-pencil-alt mr-2 text-primary"></i>Text Input
-                                    </div>
-                                    <div class="field-item" draggable="true" data-type="email">
-                                        <i class="fas fa-envelope mr-2 text-success"></i>Email Address
-                                    </div>
-                                    <div class="field-item" draggable="true" data-type="tel">
-                                        <i class="fas fa-phone mr-2 text-info"></i>Phone Number
-                                    </div>
-                                    <div class="field-item" draggable="true" data-type="number">
-                                        <i class="fas fa-hashtag mr-2 text-warning"></i>Number Field
-                                    </div>
-                                    <div class="field-item" draggable="true" data-type="textarea">
-                                        <i class="fas fa-align-left mr-2 text-secondary"></i>Text Area
-                                    </div>
-                                    <div class="field-item" draggable="true" data-type="date">
-                                        <i class="fas fa-calendar-alt mr-2 text-danger"></i>Date
-                                    </div>
-                                    <div class="field-item" draggable="true" data-type="select">
-                                        <i class="fas fa-list mr-2 text-primary"></i>Select Dropdown
-                                    </div>
-                                    <div class="field-item" draggable="true" data-type="radio">
-                                        <i class="fas fa-dot-circle mr-2 text-success"></i>Radio Buttons
-                                    </div>
-                                    <div class="field-item" draggable="true" data-type="checkbox">
-                                        <i class="fas fa-check-square mr-2 text-info"></i>Checkboxes
-                                    </div>
-                                    <div class="field-item" draggable="true" data-type="file">
-                                        <i class="fas fa-upload mr-2 text-warning"></i>File Upload
-                                    </div>
+                                <div id="fieldPalette" class="card shadow-sm p-3">
+                                    Loading fields...
+                                </div>
+                                <div class="mt-3">
+                                    <a href="{{ route('field-types.index') }}" class="btn btn-sm btn-info rounded-pill">
+                                        🔧 Manage Field Types
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -104,6 +80,52 @@
     background: white;
     border-radius: 4px;
     position: relative;
+    cursor: grab;
+    transition: all 0.2s ease;
+}
+.form-field:active {
+    cursor: grabbing;
+}
+.form-field:hover {
+    border-color: #007bff;
+    box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+    transform: translateY(-2px);
+}
+.form-field.dragging {
+    opacity: 0.6;
+    transform: rotate(3deg) scale(1.02);
+    z-index: 1000;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+.drop-indicator {
+    height: 4px;
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    margin: 8px 0;
+    border-radius: 3px;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+.drop-indicator.active {
+    opacity: 1;
+    animation: pulse 1s infinite;
+}
+@keyframes pulse {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(1.5); }
+}
+.drag-handle {
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: grab;
+    color: #6c757d;
+    font-size: 18px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+.form-field:hover .drag-handle {
+    opacity: 1;
 }
 .field-controls {
     position: absolute;
@@ -125,13 +147,26 @@ let formFields = [];
 let fieldCounter = 0;
 
 document.addEventListener('DOMContentLoaded', function() {
-    setupDragDrop();
+    loadFieldPalette();
 
     document.getElementById('formBuilder').addEventListener('submit', function(e) {
         e.preventDefault();
         saveForm();
     });
 });
+
+function loadFieldPalette() {
+    fetch('/admin/field-types-api')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('fieldPalette').innerHTML = html;
+            setupDragDrop();
+        })
+        .catch(error => {
+            console.error('Error loading field palette:', error);
+            document.getElementById('fieldPalette').innerHTML = 'Error loading fields';
+        });
+}
 
 function setupDragDrop() {
     const fieldItems = document.querySelectorAll('.field-item');
@@ -156,7 +191,47 @@ function setupDragDrop() {
         e.preventDefault();
         this.classList.remove('drag-over');
         const fieldType = e.dataTransfer.getData('text/plain');
-        addField(fieldType);
+        if (fieldType) {
+            addField(fieldType);
+        }
+    });
+}
+
+function setupFieldDragDrop() {
+    const formFields = document.querySelectorAll('.form-field');
+    const dropIndicators = document.querySelectorAll('.drop-indicator');
+    
+    formFields.forEach(field => {
+        field.addEventListener('dragstart', function(e) {
+            e.dataTransfer.setData('application/json', JSON.stringify({type: 'reorder', fieldId: this.dataset.fieldId}));
+            this.classList.add('dragging');
+        });
+        
+        field.addEventListener('dragend', function(e) {
+            this.classList.remove('dragging');
+            dropIndicators.forEach(indicator => indicator.classList.remove('active'));
+        });
+    });
+    
+    dropIndicators.forEach((indicator, index) => {
+        indicator.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('active');
+        });
+        
+        indicator.addEventListener('dragleave', function(e) {
+            this.classList.remove('active');
+        });
+        
+        indicator.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('active');
+            
+            const data = JSON.parse(e.dataTransfer.getData('application/json') || '{}');
+            if (data.type === 'reorder') {
+                reorderField(data.fieldId, index);
+            }
+        });
     });
 }
 
@@ -199,10 +274,13 @@ function addField(type) {
 function renderField(field) {
     const formFieldsArea = document.getElementById('formFields');
     const fieldHtml = `
-        <div class="form-field" data-field-id="${field.id}">
+        <div class="drop-indicator"></div>
+        <div class="form-field" data-field-id="${field.id}" draggable="true">
             <div class="field-controls">
-                <button type="button" class="btn btn-sm btn-warning" onclick="editField('${field.id}')">⚙️</button>
-                <button type="button" class="btn btn-sm btn-danger" onclick="removeField('${field.id}')">🗑️</button>
+                <button type="button" class="btn btn-sm btn-secondary" onclick="moveFieldUp('${field.id}')" title="Move Up">⬆️</button>
+                <button type="button" class="btn btn-sm btn-secondary" onclick="moveFieldDown('${field.id}')" title="Move Down">⬇️</button>
+                <button type="button" class="btn btn-sm btn-warning" onclick="editField('${field.id}')" title="Edit">⚙️</button>
+                <button type="button" class="btn btn-sm btn-danger" onclick="removeField('${field.id}')" title="Remove">🗑️</button>
             </div>
             <div class="form-group">
                 <label><strong>${field.label} ${field.required ? '*' : ''}</strong></label>
@@ -211,6 +289,13 @@ function renderField(field) {
         </div>
     `;
     formFieldsArea.insertAdjacentHTML('beforeend', fieldHtml);
+
+    // Add final drop indicator
+    if (formFields.length === 1) {
+        formFieldsArea.insertAdjacentHTML('beforeend', '<div class="drop-indicator"></div>');
+    }
+
+    setupFieldDragDrop();
 }
 
 function generateFieldInput(field) {
@@ -346,15 +431,49 @@ function closeEditModal() {
     }
 }
 
+function moveFieldUp(fieldId) {
+    const fieldIndex = formFields.findIndex(f => f.id === fieldId);
+    if (fieldIndex > 0) {
+        [formFields[fieldIndex], formFields[fieldIndex - 1]] = [formFields[fieldIndex - 1], formFields[fieldIndex]];
+        refreshFormBuilder();
+    }
+}
+
+function moveFieldDown(fieldId) {
+    const fieldIndex = formFields.findIndex(f => f.id === fieldId);
+    if (fieldIndex < formFields.length - 1) {
+        [formFields[fieldIndex], formFields[fieldIndex + 1]] = [formFields[fieldIndex + 1], formFields[fieldIndex]];
+        refreshFormBuilder();
+    }
+}
+
+function reorderField(fieldId, newPosition) {
+    const fieldIndex = formFields.findIndex(f => f.id === fieldId);
+    if (fieldIndex !== -1) {
+        const field = formFields.splice(fieldIndex, 1)[0];
+        formFields.splice(newPosition, 0, field);
+        refreshFormBuilder();
+    }
+}
+
+function refreshFormBuilder() {
+    const formFieldsArea = document.getElementById('formFields');
+    formFieldsArea.innerHTML = '';
+    
+    if (formFields.length === 0) {
+        formFieldsArea.innerHTML = '<h5 class="text-muted">Drag fields here to build your form</h5>';
+        return;
+    }
+    
+    formFields.forEach(field => {
+        renderField(field);
+    });
+}
+
 function removeField(fieldId) {
     if (confirm('Remove this field?')) {
         formFields = formFields.filter(f => f.id !== fieldId);
-        document.querySelector(`[data-field-id="${fieldId}"]`).remove();
-
-        // Show placeholder if no fields
-        if (formFields.length === 0) {
-            document.getElementById('formFields').innerHTML = '<h5 class="text-muted">Drag fields here to build your form</h5>';
-        }
+        refreshFormBuilder();
     }
 }
 

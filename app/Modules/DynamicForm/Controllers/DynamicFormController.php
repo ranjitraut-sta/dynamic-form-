@@ -21,11 +21,6 @@ class DynamicFormController extends Controller
         return view('dynamicform::create');
     }
 
-    public function simpleCreate()
-    {
-        return view('dynamicform::simple-create');
-    }
-
     public function store(Request $request)
     {
         $form = Form::create([
