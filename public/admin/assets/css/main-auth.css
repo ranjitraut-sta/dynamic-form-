@@ -1,0 +1,599 @@
+/* Custom CSS Variables for Theme */
+:root {
+    --primary-purple: #aa4fff; /* Darker purple for text/accents */
+    --light-purple: #7A52FF; /* Lighter, vibrant purple for buttons/links */
+    --dark-background: #2D263B; /* Main background color */
+    --card-background: #3B334D; /* Background for the login card */
+    --input-background: #4A425F; /* Background for input fields */
+    --text-color: #E0E0E0; /* Light grey for general text */
+    --muted-text-color: #B0B0B0; /* Slightly darker grey for muted text */
+    --border-color: #5C5470; /* Border for inputs and social buttons */
+    --hover-background: #8175a7; /* Hover state for interactive elements */
+    --focus-border-color: #9C7AF0; /* Focus border for inputs */
+    --checkbox-border: #7A52FF; /* Checkbox border color */
+    --terms-link-color: #7A52FF; /* Terms and conditions link color */
+    --login-link-color: #cb8aff; /* Log in link color */
+    --button-text: #FFFFFF; /* Text color for primary buttons */
+    --social-btn-text: #FFFFFF; /* Text color for social buttons */
+    --google-icon-color: #DB4437; /* Google red */
+    --apple-icon-color: #A2AAAD; /* Apple grey */
+}
+
+html, body {
+    height: 100%; /* Ensure html and body take full height */
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--dark-background);
+    color: var(--text-color);
+    overflow: hidden; /* Hide scrollbars initially for smooth fade-in */
+}
+
+/* Page Container */
+.login-page {
+    background-color: var(--dark-background);
+    min-height: 100vh; /* Ensure it takes full viewport height */
+    display: flex; /* Use flexbox for centering */
+    justify-content: center;
+    align-items: center;
+    padding: 1rem; /* Add padding for very small screens */
+    box-sizing: border-box; /* Include padding in element's total width and height */
+}
+
+/* Login Card Container */
+.login-card {
+    max-width: 1200px; /* Adjust as needed */
+    width: 100%; /* Take full width within padding */
+    min-height: 600px; /* Minimum height for larger screens */
+    background-color: var(--card-background);
+    border-radius: 20px !important; /* Larger border-radius */
+    animation: fadeIn 1s ease-out forwards; /* Fade-in effect on load */
+    opacity: 0; /* Start invisible for animation */
+    display: flex; /* Ensure row behaves as flex container */
+    flex-wrap: wrap; /* Allow columns to wrap */
+}
+
+/* Left Section - Image Slider Container */
+.slider-container {
+    position: relative;
+    overflow: hidden; /* Hide overflowing slides */
+    border-radius: 20px 0 0 20px !important; /* Match card radius for left side */
+}
+
+/* Individual Slides */
+.slider-images {
+    position: relative; /* Container for slides */
+    height: 100%;
+    width: 100%;
+}
+
+.slide {
+    position: absolute; /* Stack slides */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 1s ease-in-out; /* Smooth fade transition */
+}
+
+.slide.active {
+    opacity: 5; /* Active slide is visible */
+}
+
+/* Overlay for text and logo */
+.slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(194, 203, 250, 0.8), rgba(122, 82, 255, 0.8));
+    z-index: 1; /* Ensure text is above background but below overlay */
+}
+
+/* Text and elements on the left section (ensure they are above the slides) */
+.slider-container > div:first-child, /* Logo and back button */
+.slide-content-wrapper { /* Slogan and dots */
+    position: absolute; /* Make them sit above the slides */
+    z-index: 10; /* Higher z-index than the slides and their overlay */
+}
+
+.slider-container .logo {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.slogan-text { /* Specific class for slogan text */
+    font-size: 2.8rem;
+    line-height: 1.2;
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+.back-to-website-btn {
+    border-color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    padding: 8px 15px;
+}
+
+.back-to-website-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.6);
+    color: #FFFFFF;
+}
+
+/* Dots for image slider */
+.slider-dots { /* Parent container for dots */
+    position: absolute;
+    bottom: 20px; /* Position them at the bottom */
+    width: 100%;
+    left: 0;
+    justify-content: center;
+    padding-left: 0; /* Remove default bootstrap padding if any */
+}
+
+.dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    margin: 0 4px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    cursor: pointer; /* Indicate clickability */
+}
+
+.dot.active {
+    background-color: #FFFFFF;
+    transform: scale(1.2); /* Slightly larger when active */
+}
+
+/* Right Section - Form */
+.right-section {
+    background-color: var(--card-background);
+    color: var(--text-color);
+    padding: 3rem !important; /* Override default Bootstrap padding */
+    position: relative; /* Needed for absolute positioning of form panels */
+    overflow: hidden; /* Clip content that slides out */
+    min-height: 600px; /* Adjust this to match your desired card height for consistency */
+    display: flex; /* Use flex to push social login to bottom */
+    flex-direction: column;
+    /* On larger screens, the border-radius for right side */
+    border-radius: 0 20px 20px 0 !important;
+}
+
+/* Form Panels for switching - UPDATED STYLES FOR BOUNCY SLIDE */
+.form-panel {
+    position: absolute; /* Stack panels */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 3rem !important; /* Ensure padding matches parent */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(0); /* Default initial transform */
+    transition: opacity 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+                transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+                visibility 0s ease 0.6s; /* Delay visibility change until animation ends */
+    display: flex; /* Use flex to align content within panel */
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    flex-grow: 1; /* Allow form content to grow within its panel */
+}
+
+/* Active panel (visible and at final position) */
+.form-panel.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    transition: opacity 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+                transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+                visibility 0s ease 0s;
+}
+
+/* Entering Panel (Slides in from a direction) */
+.form-panel.entering-from-left {
+    transform: translateX(-100%); /* Start from left */
+    opacity: 0;
+    visibility: hidden;
+}
+
+.form-panel.entering-from-right {
+    transform: translateX(100%); /* Start from right */
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Exiting Panel (Slides out to a direction) */
+.form-panel.exiting-to-left {
+    transform: translateX(-100%); /* Exit to left */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+                transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+                visibility 0s ease 0.6s;
+}
+
+.form-panel.exiting-to-right {
+    transform: translateX(100%); /* Exit to right */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+                transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+                visibility 0s ease 0.6s;
+}
+
+/* Common Social Login Section */
+.right-section .or-register-with,
+.right-section .d-flex.flex-column.flex-md-row {
+    position: relative; /* Make them flow naturally within the right-section */
+    margin-top: auto; /* Push to the bottom */
+    margin-left: 0; /* Reset margins */
+    margin-right: 0; /* Reset margins */
+    width: 100%; /* Take full width within padding */
+    padding-left: 0; /* Remove default bootstrap padding */
+    padding-right: 0; /* Remove default bootstrap padding */
+    flex-shrink: 0; /* Prevent from shrinking */
+}
+.right-section .or-register-with {
+    margin-bottom: 1.5rem; /* Space before buttons */
+    padding-top: 1.5rem; /* Space above text */
+}
+.right-section .d-flex.flex-column.flex-md-row {
+    padding-bottom: 0; /* No extra padding below buttons */
+    margin-bottom: 0; /* Remove any default bottom margin */
+}
+
+
+.form-title {
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 2.2rem;
+}
+
+.already-account .text-muted {
+    color: var(--muted-text-color) !important; /* Ensure muted color applies */
+    font-size: 0.95rem;
+}
+
+.form-switch-link, /* New class for the switch links */
+.terms-link {
+    color: var(--login-link-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.form-switch-link:hover,
+.terms-link:hover {
+    color: var(--primary-purple);
+
+
+}
+
+/* Custom Input Fields */
+.custom-input.form-control {
+    background-color: var(--input-background);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 12px 18px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.custom-input.form-control::placeholder {
+    color: var(--muted-text-color);
+    opacity: 0.7;
+}
+
+.custom-input.form-control:focus {
+    background-color: var(--hover-background);
+    border-color: var(--focus-border-color);
+    box-shadow: 0 0 0 0.25rem rgba(156, 122, 240, 0.25); /* Focus ring */
+    color: var(--text-color);
+}
+
+/* Password Toggle Icon */
+.password-input-container {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--muted-text-color);
+    transition: color 0.2s ease;
+}
+
+.password-toggle:hover {
+    color: var(--text-color);
+}
+
+/* Custom Checkbox */
+.custom-checkbox .form-check-input {
+    background-color: var(--input-background);
+    border: 1px solid var(--checkbox-border);
+    border-radius: 4px;
+    width: 1.25em;
+    height: 1.25em;
+    margin-top: 0.25em;
+    transition: all 0.2s ease;
+}
+
+.custom-checkbox .form-check-input:checked {
+    background-color: var(--checkbox-border);
+    border-color: var(--checkbox-border);
+    box-shadow: none;
+}
+
+.custom-checkbox .form-check-label {
+    color: var(--muted-text-color);
+    font-size: 0.95rem;
+}
+
+/* Custom Primary Button */
+.custom-btn.btn-primary {
+    background-color: var(--light-purple);
+    border-color: var(--light-purple);
+    color: var(--button-text);
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.custom-btn.btn-primary:hover {
+    background-color: var(--primary-purple);
+    border-color: var(--primary-purple);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Or Register With text */
+.or-register-with {
+    font-size: 0.9rem;
+    color: var(--muted-text-color);
+    position: relative;
+    /* margin-top will be handled by flex-grow: 1 on forms */
+}
+
+.or-register-with::before,
+.or-register-with::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 30%; /* Adjust line length */
+    height: 1px;
+    background-color: var(--border-color);
+}
+
+.or-register-with::before {
+    left: 0;
+    transform: translateY(-50%);
+}
+
+.or-register-with::after {
+    right: 0;
+    transform: translateY(-50%);
+}
+
+/* Social Buttons */
+.social-btn {
+    background-color: var(--input-background);
+    border: 1px solid var(--border-color);
+    color: var(--social-btn-text);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-btn:hover {
+    background-color: var(--hover-background);
+    border-color: var(--focus-border-color);
+    color: var(--social-btn-text);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.social-btn .fab {
+    font-size: 1.1rem;
+}
+
+.social-btn .fa-google {
+    color: var(--google-icon-color);
+}
+
+.social-btn .fa-apple {
+    color: var(--apple-icon-color);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Responsive Adjustments (Media Queries) --- */
+
+/* Extra small devices (portrait phones, less than 576px) */
+/* No specific breakpoint needed as base styles are for mobile-first */
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+    .login-page {
+        padding: 1.5rem; /* Slightly more padding */
+    }
+    .right-section {
+        padding: 2.5rem !important; /* Adjust padding for forms */
+    }
+    .form-title {
+        font-size: 2rem; /* Slightly smaller for better fit */
+    }
+    .slogan-text {
+        font-size: 2.2rem; /* Adjusted for landscape phones */
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    body {
+        overflow: hidden; /* Restore hidden overflow on larger screens for cleaner layout */
+    }
+    .login-card {
+        width: 90%; /* Make card take more width */
+        min-height: 600px; /* Ensure minimum height */
+        /* For tablets, we might want to keep the single column layout or switch to two if wide enough */
+        flex-direction: row; /* Default to row on md+ if you want two columns */
+        border-radius: 20px !important; /* Ensure rounded corners */
+    }
+    .right-section {
+        padding: 3rem !important; /* Standard padding */
+        min-height: 600px; /* Match card min-height */
+        /* Restore specific border-radius for right side when slider is present */
+        border-radius: 0 20px 20px 0 !important;
+    }
+    .slider-container {
+        border-radius: 20px 0 0 20px !important; /* Restore specific border-radius for left side */
+    }
+
+    .form-panel {
+        padding: 3rem !important; /* Match right-section padding */
+    }
+
+    .form-title {
+        font-size: 2.2rem; /* Original size */
+    }
+    .slogan-text {
+        font-size: 2.8rem; /* Original size */
+    }
+    /* Hide social login section on single-column layouts by default */
+    /* .right-section .or-register-with, */
+    /* .right-section .d-flex.flex-column.flex-md-row {
+        display: block; /* Show them as default */
+    /* } */
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .login-card {
+        width: 85%; /* Make card even wider */
+    }
+    /* Ensure the left slider section is visible */
+    .col-lg-6.d-none.d-lg-flex {
+        display: flex !important; /* Bootstrap's d-lg-flex handles this, just for clarity */
+    }
+    .right-section {
+        height: auto; /* Allow height to adjust based on content within the fixed min-height of card */
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .login-card {
+        width: 1100px; /* Fixed width for very large screens or keep max-width */
+        max-width: 1200px; /* Maintain max-width */
+    }
+}
+
+/* Special adjustments for very small screens or when the layout shifts to single column */
+@media (max-width: 767.98px) { /* Tablets and below (Bootstrap's -md breakpoint) */
+    body {
+        overflow-y: auto; /* Allow scrolling on smaller screens if content overflows */
+    }
+    .login-page {
+        align-items: flex-start; /* Align to top instead of center for better vertical space */
+        padding-top: 20px; /* Add some top padding */
+        padding-bottom: 20px; /* Add some bottom padding */
+    }
+    .login-card {
+        border-radius: 15px !important; /* Slightly smaller border-radius */
+        min-height: auto; /* Allow height to collapse based on content */
+    }
+    .slider-container {
+        display: none !important; /* Hide the slider completely on small screens */
+        border-radius: 15px 15px 0 0 !important; /* Adjust border-radius for top part of card */
+        height: 200px; /* Give it a fixed height if it were visible for a small splash */
+    }
+    /* When slider is hidden, right section takes full width and adjusts its border-radius */
+    .right-section {
+        padding: 2rem !important; /* Reduce padding for small screens */
+        border-radius: 15px !important; /* Apply border-radius to all corners */
+        min-height: auto; /* Allow content to dictate height */
+        /* Ensure social buttons are at the bottom for single column layout too */
+        flex-direction: column;
+        justify-content: flex-start; /* Align content to start */
+    }
+    .form-panel {
+        padding: 2rem !important; /* Match right-section padding */
+        position: static; /* Remove absolute positioning on small screens for natural flow */
+        opacity: 1; /* Always visible */
+        visibility: visible; /* Always visible */
+        transform: translateX(0); /* No transform */
+        transition: none; /* Disable transitions as we are not sliding here */
+        height: auto; /* Allow content to dictate height */
+    }
+
+    /* Override flex-wrap for social buttons on small screens */
+    .d-flex.flex-column.flex-md-row {
+        flex-direction: column !important;
+    }
+    .social-btn {
+        width: 100%; /* Make social buttons take full width */
+        margin-bottom: 1rem; /* Space between social buttons */
+    }
+    .social-btn:last-child {
+        margin-bottom: 0; /* No margin after the last one */
+    }
+
+    /* Hide the or-register-with separator if not needed on very small screens, or adjust its width */
+    .or-register-with::before,
+    .or-register-with::after {
+        width: 25%; /* Shorter lines */
+    }
+}
+
+/* Optional: Even smaller adjustments for iPhone SE size or similar */
+@media (max-width: 400px) {
+    .right-section {
+        padding: 1.5rem !important;
+    }
+    .form-title {
+        font-size: 1.8rem;
+    }
+    .slogan-text {
+        font-size: 1.8rem;
+    }
+    .custom-input.form-control {
+        padding: 10px 15px;
+    }
+    .custom-btn.btn-primary {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+    .already-account, .custom-checkbox .form-check-label {
+        font-size: 0.9rem;
+    }
+}

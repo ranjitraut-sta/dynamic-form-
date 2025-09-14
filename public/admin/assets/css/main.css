@@ -1,0 +1,4423 @@
+:root {
+    /* Main color palette */
+    --amd-primary-color: #6b00b7;
+    --amd-primary-light: #e6e1ff;
+    --amd-primary-purple: #7a52ff;
+    --amd-secondary-color: #8a2be2;
+
+    /* Backgrounds & Text */
+    --amd-light-bg: #f8f9fa;
+    --amd-dark-bg: #ffffff;
+    --amd-text-color: #333;
+    --amd-light-text: #090909;
+
+    /* Borders & Shadows */
+    --amd-border-color: #e0e0e0;
+    --amd-shadow-color: rgba(0, 0, 0, 0.05);
+
+    /* Aliases for clarity & consistency */
+    --amd-sidebar-hover-bg: var(--amd-primary-light);
+    --amd-sidebar-active-color: var(--amd-primary-color);
+    --amd-link-hover-color: var(--amd-primary-color);
+    --amd-button-text-color: #fff;
+    --amd-grey-text: #666;
+    /* New variable for consistent grey text */
+
+    /* Notification Panel specific colors */
+    --amd-notif-bell-color: var(--amd-secondary-color);
+    --amd-notif-bell-hover-color: var(--amd-primary-purple);
+    --amd-notif-panel-shadow: var(--amd-light-text);
+    --amd-chat-search-bg: #f0f0f5;
+    --amd-chat-search-border: var(--amd-primary-purple);
+    --amd-chat-search-focus-border: var(--amd-primary-color);
+    --amd-chat-search-focus-bg: var(--amd-primary-light);
+    --amd-chat-tab-inactive-color: #aaa;
+    --amd-chat-tab-active-color: var(--amd-primary-purple);
+    --amd-chat-list-scrollbar-thumb: #d1bfff;
+    --amd-chat-card-bg: #ffffff;
+    --amd-chat-card-shadow: rgba(0, 0, 0, 0.05);
+    --amd-chat-card-hover-bg: var(--amd-primary-light);
+    --amd-chat-card-hover-shadow-primary: rgba(122, 82, 255, 0.3);
+    --amd-chat-card-hover-shadow-secondary: rgba(0, 0, 0, 0.05);
+    --amd-avatar-border-color: var(--amd-primary-color);
+    --amd-chat-info-text-color: var(--amd-text-color);
+    --amd-chat-msg-color: #888;
+    --amd-chat-date-color: var(--amd-primary-purple);
+    --amd-chat-nav-icon-color: var(--amd-border-color);
+    --amd-chat-nav-icon-hover-color: var(--amd-primary-purple);
+    --amd-chat-nav-icon-active-color: var(--amd-primary-purple);
+
+    /* Search Bar Specific */
+    --amd-search-toggle-color: #6b21a8;
+    --amd-search-toggle-animate-color: #c084fc;
+    --amd-search-input-border: #ccc;
+    --amd-search-input-focus-border: var(--amd-primary-color);
+    --amd-clear-input-btn-color: #c084fc;
+    --amd-clear-input-btn-hover-color: var(--amd-primary-purple);
+
+    /* Dropdown specific */
+    --amd-dropdown-item-hover-bg: var(--amd-primary-light);
+    --amd-dropdown-item-hover-color: #670090;
+    --amd-dropdown-arrow-color: #6c757d;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background-color: var(--amd-light-bg);
+    overflow-x: hidden;
+}
+
+/* Firefox scrollbar */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--amd-primary-light) transparent;
+}
+
+/* AMD Logo/Title in Sidebar */
+.amd-sidebar .amd-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--amd-light-text);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.amd-sidebar .amd-logo img {
+    margin-bottom: 5px;
+    padding-left: 0 !important;
+}
+
+.amd-sidebar .amd-logo .amd-label-text {
+    white-space: normal;
+    text-align: center;
+}
+
+/* --- AMD Sidebar Styles (Updated for Professional Look) --- */
+.amd-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 76px;
+    background-color: var(--amd-dark-bg);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    transition: width 0.3s ease, background-color 0.3s;
+    z-index: 1000;
+    overflow-y: auto;
+    overflow-x: hidden;
+    color: var(--amd-light-text);
+    display: flex;
+    flex-direction: column;
+    scrollbar-width: thin;
+    scrollbar-color: var(--amd-primary-light) transparent;
+}
+
+#amdSidebar {
+    transition: none;
+}
+
+/* Sidebar expanded on hover or click */
+.amd-sidebar:hover,
+.amd-sidebar.expanded {
+    width: 250px;
+}
+
+/* AMD Logo Styles */
+.amd-sidebar .amd-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--amd-light-text);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.amd-sidebar .amd-logo img {
+    margin-bottom: 6px;
+    padding-left: 0 !important;
+    max-height: 60px;
+    object-fit: contain;
+}
+
+.amd-sidebar .amd-logo .amd-label-text {
+    white-space: normal;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Sidebar Navigation */
+.amd-sidebar ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.amd-sidebar ul li a {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    color: var(--amd-light-text);
+    text-decoration: none;
+    padding: 10px 18px;
+    width: 100%;
+    font-size: 15px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    border-radius: 10px;
+}
+
+.amd-sidebar ul li a.active,
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link,
+.amd-sidebar ul li.active a {
+    background-color: var(--amd-primary-light);
+    color: var(--amd-primary-color);
+    font-weight: 600;
+    border-radius: 5px;
+}
+
+/*
+
+
+/* Better submenu spacing for large groups */
+.amd-submenu,
+.amd-sub-submenu,
+.amd-sub-submenu-tables {
+    padding-left: 1.8rem;
+    margin-top: 0.25rem;
+}
+
+/* Add spacing between main menu groups */
+.amd-sidebar ul li {
+    margin-bottom: 0.4rem;
+}
+
+.amd-sidebar:not(.expanded):not(:hover) ul li a {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+    position: relative;
+}
+
+.amd-sidebar ul li a:hover,
+.nav-link:focus,
+.nav-link:hover {
+    background-color: var(--amd-primary-light);
+    color: var(--amd-primary-color);
+    border-radius: 5px;
+}
+
+.amd-submenu a {
+    margin: 5px; /* default ma rakha */
+    transition: all 0.3s ease;
+}
+
+.amd-submenu a:hover {
+    background-color: #eee;
+    color: #000;
+}
+
+
+.amd-sidebar ul li i {
+    font-size: 18px;
+    width: 30px;
+    text-align: center;
+}
+
+/* Submenus */
+.amd-submenu,
+.amd-sub-submenu,
+.amd-sub-submenu-tables {
+    padding-left: 1.2rem;
+}
+
+.amd-submenu-link,
+.amd-sub-submenu-link,
+.amd-sub-table-link {
+    display: block;
+    padding: 0.6rem 1rem;
+    font-size: 0.9em;
+    border-radius: 8px;
+    color: var(--amd-light-text);
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.amd-submenu-link:hover,
+.amd-sub-submenu-link:hover,
+.amd-sub-table-link:hover,
+.amd-sub-submenu-link.active,
+.amd-sub-table-link.active {
+    background-color: var(--amd-sidebar-hover-bg);
+    color: var(--amd-primary-color);
+    font-weight: 500;
+    border-radius: 5px;
+}
+
+/* Arrow Rotation */
+.amd-sidebar-nav .nav-link .amd-rotate-icon,
+.amd-sidebar-nav .amd-submenu-link .amd-rotate-icon,
+.amd-sidebar-nav .amd-sub-submenu-link .amd-rotate-icon {
+    margin-left: auto;
+    transition: transform 0.3s ease;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.amd-sidebar-nav .nav-link[aria-expanded="true"] .amd-rotate-icon,
+.amd-sidebar-nav .amd-submenu-link[aria-expanded="true"] .amd-rotate-icon,
+.amd-sidebar-nav .amd-sub-submenu-link[aria-expanded="true"] .amd-rotate-icon {
+    transform: rotate(180deg);
+}
+
+/* Sidebar Label Text Fade */
+.amd-label-text {
+    color: var(--amd-light-text);
+    opacity: 0;
+    white-space: nowrap;
+    transition: opacity 0.3s ease;
+    transition-delay: 0.1s;
+}
+
+.amd-sidebar:hover .amd-label-text,
+.amd-sidebar.expanded .amd-label-text,
+.amd-sidebar.mobile-open .amd-label-text {
+    opacity: 1;
+}
+
+/* Upgrade Card */
+.amd-bottom-card .amd-upgrade-card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+    color: var(--amd-light-text);
+}
+
+.amd-bottom-card .amd-upgrade-card p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.amd-bottom-card .amd-upgrade-card .btn {
+    padding: 4px 10px;
+    font-size: 13px;
+    border-radius: 6px;
+    background: var(--amd-primary-light);
+    color: var(--amd-primary-color);
+    border: none;
+    font-weight: 500;
+}
+
+.amd-bottom-card .amd-upgrade-card .btn:hover {
+    background-color: var(--amd-primary-color);
+    color: #fff;
+}
+
+/* Default: show text */
+/* .amd-sidebar ul li a .amd-label-text,
+.amd-sidebar .amd-submenu,
+.amd-sidebar .amd-sub-submenu,
+.amd-sidebar .amd-sub-submenu-tables {
+  display: block !important;
+} */
+
+/* Desktop: on collapsed sidebar, hide texts */
+@media (min-width: 769px) {
+    /* Desktop breakpoint */
+    .amd-sidebar:not(.expanded):not(:hover) ul li a .amd-label-text,
+    .amd-sidebar:not(.expanded):not(:hover) .amd-submenu,
+    .amd-sidebar:not(.expanded):not(:hover) .amd-sub-submenu,
+    .amd-sidebar:not(.expanded):not(:hover) .amd-sub-submenu-tables {
+        display: none !important;
+    }
+
+    .amd-sidebar:not(.expanded):not(:hover) ul li a > *:not(i) {
+        display: none !important;
+        /* Only icons visible */
+    }
+}
+
+/* ******************** */
+/* Footer Styles */
+
+/* ==== Footer ==== */
+.amd-footer {
+    background-color: var(--amd-dark-bg);
+    color: var(--amd-text-color);
+    position: relative;
+    border-top: 1px solid #b1b0b0;
+}
+
+.amd-footer a:hover {
+    color: var(--amd-primary-purple);
+}
+
+.footer-bottom {
+    font-size: 13px;
+    color: var(--amd-clear-input-btn-color);
+    margin: 15px;
+}
+
+.footer-bottom strong {
+    color: var(--amd-primary-color);
+}
+
+/* ==== Scroll to top button ==== */
+.scroll-to-top-btn {
+    position: fixed;
+    bottom: 70px;
+    right: 25px;
+    background: linear-gradient(
+        135deg,
+        var(--amd-primary-color),
+        var(--amd-primary-purple)
+    );
+    color: var(--amd-chat-card-bg);
+    width: 38px;
+    height: 48px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 12px var(--amd-primary-purple);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 1000;
+}
+
+.scroll-to-top-btn.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.scroll-to-top-btn:hover {
+    transform: translateY(-6px) scale(1.05);
+    box-shadow: 0 0 18px var(--amd-secondary-color);
+}
+
+.scroll-to-top-btn i {
+    font-size: 16px;
+}
+
+/* Responsive adjustments for the custom elements */
+@media (max-width: 767.98px) {
+    /* Small devices (sm and below) */
+    .footer-container {
+        flex-direction: column;
+    }
+
+    .footer-marquee,
+    .scroll-to-top-btn {
+        width: 28px;
+        height: 38px;
+        text-align: center;
+        margin-bottom: 10px;
+        /* Add space between elements when stacked */
+    }
+
+    .scroll-to-top-btn {
+        margin: 0 auto;
+        /* Center button when stacked */
+    }
+}
+
+/* AMD Bottom Card */
+.amd-bottom-card {
+    padding: 16px;
+    margin-top: auto;
+}
+
+.amd-upgrade-card {
+    background: var(--amd-primary-light);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    padding: 15px;
+    color: var(--amd-text-color);
+    overflow: hidden;
+    white-space: nowrap;
+    /* Keep text on one line when collapsed */
+}
+
+.amd-upgrade-card p {
+    margin: 0;
+    color: var(--amd-text-color);
+    font-size: 13px;
+}
+
+.amd-upgrade-card .btn {
+    font-size: 12px;
+    margin-top: 10px;
+    background-color: var(--amd-secondary-color);
+    border-color: var(--amd-secondary-color);
+    color: var(--amd-button-text-color);
+}
+
+/* --- AMD Main Content Area --- */
+.amd-main-content {
+    margin-left: 72px;
+    transition: margin-left 0.3s ease;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.amd-sidebar:hover ~ .amd-main-content,
+.amd-sidebar.expanded ~ .amd-main-content {
+    margin-left: 230px;
+}
+
+/* --- AMD Topbar Styles --- */
+.amd-topbar {
+    height: 60px;
+    background: var(--amd-dark-bg);
+    border-bottom: 1px solid var(--amd-border-color);
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 2px 4px var(--amd-shadow-color);
+}
+
+.amd-topbar .amd-toggle-btn {
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--amd-text-color);
+    margin-right: 15px;
+}
+
+/* Animated search bar */
+.search-container {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(87, 87, 87, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    height: 36px;
+    width: 100%;
+    max-width: 320px;
+    transition: all 0.3s ease;
+}
+
+.search-container:hover {
+    border-color: var(--amd-secondary-color);
+}
+
+.search-container:hover,
+.search-container:focus-within {
+    border-color: var(--amd-secondary-color);
+}
+
+.search-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #4d4d4d;
+    padding: 8px 12px;
+    width: 100%;
+    font-size: 13px;
+}
+
+.search-input::placeholder {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.search-button {
+    border: none;
+    background: linear-gradient(135deg, #5e60ce7c, #7500b8b9);
+    color: rgb(202, 202, 202);
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-button:hover {
+    color: rgb(255, 255, 255);
+}
+
+.clear-button {
+    position: absolute;
+    right: 44px;
+    font-size: 23px;
+    color: var(--amd-search-toggle-color);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: none;
+}
+
+/* ========== Notification Dropdown ========== */
+.notification-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.notif-bell {
+    font-size: 1.6rem;
+    cursor: pointer;
+    color: var(--amd-notif-bell-color);
+    margin: 10px;
+    transition: 0.3s;
+}
+
+.notif-bell:hover {
+    color: var(--amd-notif-bell-hover-color);
+}
+
+/* ========== Notification Panel ========== */
+.notification-panel {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    width: 360px;
+    height: 520px;
+    background: linear-gradient(
+        135deg,
+        rgba(184, 146, 255, 0.15),
+        rgba(255, 255, 255, 0.05)
+    );
+    border-radius: 24px;
+    box-shadow: 2px 10px 20px rgba(0, 0, 0, 0.55);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid var(--amd-primary-light);
+    display: none;
+    flex-direction: column;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.notification-panel.show {
+    display: flex;
+}
+
+.notifications-header {
+    background-color: var(--dark-background);
+    /* Or a slightly lighter shade if desired */
+    padding: 1.5rem 2rem;
+    /* Adjusted padding */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    /* Subtle separator */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-color);
+    flex-wrap: wrap;
+    /* Allow items to wrap on small screens */
+}
+
+.notifications-header h1 {
+    font-size: 1.2rem;
+    /* Adjust font size as per image */
+    font-weight: 600;
+    margin-bottom: 0;
+    color: var(--text-color);
+    letter-spacing: 0.1em;
+    /* Add subtle letter spacing */
+    text-transform: uppercase;
+}
+
+.breadcrumb-nav {
+    font-size: 0.9rem;
+    color: var(--muted-text-color);
+    display: flex;
+    /* Use flex for spacing */
+    align-items: center;
+}
+
+.breadcrumb-nav a {
+    color: var(--muted-text-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.breadcrumb-nav a:hover {
+    color: var(--text-color);
+}
+
+.breadcrumb-nav .active-link {
+    color: var(--primary-purple);
+    /* Or a highlight color for the active link */
+    font-weight: 500;
+}
+
+.breadcrumb-nav span {
+    margin: 0 5px;
+    /* Space between items */
+    color: var(--muted-text-color);
+}
+
+/* Responsive adjustments for the header */
+@media (max-width: 576px) {
+    .notifications-header {
+        flex-direction: column;
+        /* Stack items vertically */
+        align-items: flex-start;
+        /* Align text to the left */
+        padding: 1rem;
+    }
+
+    .notifications-header h1 {
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .breadcrumb-nav {
+        font-size: 0.8rem;
+    }
+}
+
+/* ========== Header ========== */
+.chat-header {
+    padding: 10px 20px 10px;
+}
+
+.chat-header h2 {
+    margin: 0 0 10px;
+    font-size: 1.2rem;
+    color: var(--amd-text-color);
+}
+
+.chat-search {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 16px;
+    background: var(--amd-chat-search-bg);
+    font-size: 0.9rem;
+    border: 1px solid var(--amd-chat-search-border);
+    outline: none;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.chat-search:focus {
+    border: 2px solid var(--amd-chat-search-focus-border);
+    background: var(--amd-chat-search-focus-bg);
+    outline: none;
+}
+
+/* ========== Tabs ========== */
+.chat-tabs {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+
+    font-weight: 600;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-bottom: 2px solid var(--amd-primary-light);
+}
+
+.chat-tabs .tab {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--amd-chat-tab-inactive-color);
+    background: none;
+    border: none;
+    position: relative;
+    cursor: pointer;
+}
+
+.chat-tabs .tab.active {
+    color: var(--amd-chat-tab-active-color);
+}
+
+.chat-tabs .tab.active::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 28px;
+    height: 2px;
+    background: var(--amd-chat-tab-active-color);
+    border-radius: 4px;
+}
+
+/* ========== Chat List ========== */
+.chat-list {
+    padding: 14px 16px;
+    flex-grow: 1;
+    overflow-y: auto;
+    max-height: 320px;
+}
+
+.chat-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-list::-webkit-scrollbar-thumb {
+    background: var(--amd-chat-list-scrollbar-thumb);
+    border-radius: 10px;
+}
+
+/* ========== Message Cards ========== */
+.chat-card {
+    display: flex;
+    align-items: center;
+    background: var(--amd-chat-card-bg);
+    border-radius: 16px;
+    cursor: pointer;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 10px var(--amd-chat-card-shadow);
+    transition: all 0.3s ease;
+}
+
+.chat-card:hover {
+    background: var(--amd-chat-card-hover-bg);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 24px var(--amd-chat-card-hover-shadow-primary),
+        0 4px 8px var(--amd-chat-card-hover-shadow-secondary);
+    transition: all 0.3s ease;
+}
+
+.avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    margin-right: 12px;
+    object-fit: cover;
+}
+
+.chat-info {
+    flex: 1;
+}
+
+.chat-name-role {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 2px;
+}
+
+.name {
+    font-size: 0.9rem;
+    color: var(--amd-chat-info-text-color);
+    font-weight: 600;
+}
+
+.role {
+    font-size: 0.6rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: 500;
+    color: var(--amd-button-text-color);
+    text-transform: uppercase;
+}
+
+.green {
+    background: #38d39f;
+}
+
+.orange {
+    background: #ff9f43;
+}
+
+.pink {
+    background: #ff6b81;
+}
+
+.purple {
+    background: #a28cff;
+}
+
+.chat-msg {
+    font-size: 0.8rem;
+    color: var(--amd-chat-msg-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chat-date {
+    font-size: 0.7rem;
+    color: var(--amd-chat-date-color);
+    margin-left: 10px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* ========== Bottom Navigation ========== */
+.chat-nav {
+    display: flex;
+    justify-content: space-around;
+    padding: 22px 0;
+    border-top-left-radius: 22px;
+    border-top-right-radius: 20px;
+    border-top: 2px solid var(--amd-primary-light);
+    background: transparent;
+}
+
+.chat-nav i {
+    font-size: 1.3rem;
+    color: var(--amd-chat-nav-icon-color);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.chat-nav i:hover {
+    color: var(--amd-chat-nav-icon-hover-color);
+}
+
+.chat-nav .active-icon {
+    color: var(--amd-chat-nav-icon-active-color);
+}
+
+@media (max-width: 576px) {
+    .notification-panel {
+        top: 50px;
+        right: -10px;
+        width: 66vw;
+        height: 1000%;
+        border-radius: 16px;
+    }
+
+    .chat-header h2 {
+        font-size: 0.8rem;
+    }
+
+    .chat-search {
+        font-size: 0.6rem;
+        padding: 8px 12px;
+    }
+
+    .chat-tabs .tab {
+        font-size: 0.55rem;
+    }
+
+    .chat-list {
+        max-height: calc(90vh - 200px);
+        padding: 5px;
+    }
+
+    .chat-card {
+        padding: 5px 10px;
+        margin-bottom: 10px;
+    }
+
+    .avatar {
+        width: 26px;
+        height: 26px;
+    }
+
+    .name {
+        font-size: 0.55rem;
+    }
+
+    .role {
+        font-size: 0.45rem;
+    }
+
+    /* --- AMD Topbar Styles --- */
+    .amd-topbar {
+        height: 60px;
+        background: var(--amd-dark-bg);
+        border-bottom: 1px solid var(--amd-border-color);
+        padding: 0 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 4px var(--amd-shadow-color);
+    }
+
+    .amd-topbar .amd-toggle-btn {
+        cursor: pointer;
+        font-size: 20px;
+        color: var(--amd-text-color);
+        margin-right: 15px;
+    }
+
+    /* Animated search bar */
+    .search-container {
+        display: flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(87, 87, 87, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 30px;
+        height: 36px;
+        width: 100%;
+        max-width: 320px;
+        transition: all 0.3s ease;
+    }
+
+    .search-container:hover {
+        border-color: var(--amd-secondary-color);
+    }
+
+    .search-container:hover,
+    .search-container:focus-within {
+        border-color: var(--amd-secondary-color);
+    }
+
+    .search-input {
+        border: none;
+        outline: none;
+        background: transparent;
+        color: #4d4d4d;
+        padding: 8px 12px;
+        width: 100%;
+        font-size: 13px;
+    }
+
+    .search-input::placeholder {
+        color: rgba(0, 0, 0, 0.6);
+    }
+
+    .search-button {
+        border: none;
+        background: linear-gradient(135deg, #5e60ce7c, #7500b8b9);
+        color: rgb(202, 202, 202);
+        border-top-right-radius: 50%;
+        border-bottom-right-radius: 50%;
+        padding: 10px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .search-button:hover {
+        color: rgb(255, 255, 255);
+    }
+
+    .clear-button {
+        position: absolute;
+        right: 44px;
+        font-size: 23px;
+        color: var(--amd-search-toggle-color);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        display: none;
+    }
+
+    /* ========== Notification Dropdown ========== */
+    .notification-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .notif-bell {
+        font-size: 1.6rem;
+        cursor: pointer;
+        color: var(--amd-notif-bell-color);
+        margin: 10px;
+        transition: 0.3s;
+    }
+
+    .notif-bell:hover {
+        color: var(--amd-notif-bell-hover-color);
+    }
+
+    /* ========== Notification Panel ========== */
+    .notification-panel {
+        position: absolute;
+        top: 40px;
+        right: 0;
+        width: 360px;
+        height: 520px;
+        background: linear-gradient(
+            135deg,
+            rgba(184, 146, 255, 0.15),
+            rgba(255, 255, 255, 0.05)
+        );
+        border-radius: 24px;
+        box-shadow: 2px 10px 20px rgba(0, 0, 0, 0.55);
+
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        border: 1px solid var(--amd-primary-light);
+        display: none;
+        flex-direction: column;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        overflow: hidden;
+    }
+
+    .notification-panel.show {
+        display: flex;
+    }
+
+    .notifications-header {
+        background-color: var(--dark-background);
+        /* Or a slightly lighter shade if desired */
+        padding: 1.5rem 2rem;
+        /* Adjusted padding */
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        /* Subtle separator */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--text-color);
+        flex-wrap: wrap;
+        /* Allow items to wrap on small screens */
+    }
+
+    .notifications-header h1 {
+        font-size: 1.2rem;
+        /* Adjust font size as per image */
+        font-weight: 600;
+        margin-bottom: 0;
+        color: var(--text-color);
+        letter-spacing: 0.1em;
+        /* Add subtle letter spacing */
+        text-transform: uppercase;
+    }
+
+    .breadcrumb-nav {
+        font-size: 0.9rem;
+        color: var(--muted-text-color);
+        display: flex;
+        /* Use flex for spacing */
+        align-items: center;
+    }
+
+    .breadcrumb-nav a {
+        color: var(--muted-text-color);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .breadcrumb-nav a:hover {
+        color: var(--text-color);
+    }
+
+    .breadcrumb-nav .active-link {
+        color: var(--primary-purple);
+        /* Or a highlight color for the active link */
+        font-weight: 500;
+    }
+
+    .breadcrumb-nav span {
+        margin: 0 5px;
+        /* Space between items */
+        color: var(--muted-text-color);
+    }
+
+    /* Responsive adjustments for the header */
+    @media (max-width: 576px) {
+        .notifications-header {
+            flex-direction: column;
+            /* Stack items vertically */
+            align-items: flex-start;
+            /* Align text to the left */
+            padding: 1rem;
+        }
+
+        .notifications-header h1 {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .breadcrumb-nav {
+            font-size: 0.8rem;
+        }
+    }
+
+    /* ========== Header ========== */
+    .chat-header {
+        padding: 10px 20px 10px;
+    }
+
+    .chat-header h2 {
+        margin: 0 0 10px;
+        font-size: 1.2rem;
+        color: var(--amd-text-color);
+    }
+
+    .chat-search {
+        width: 100%;
+        padding: 10px 14px;
+        border-radius: 16px;
+        background: var(--amd-chat-search-bg);
+        font-size: 0.9rem;
+        border: 1px solid var(--amd-chat-search-border);
+        outline: none;
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .chat-search:focus {
+        border: 2px solid var(--amd-chat-search-focus-border);
+        background: var(--amd-chat-search-focus-bg);
+        outline: none;
+    }
+
+    /* ========== Tabs ========== */
+    .chat-tabs {
+        display: flex;
+        justify-content: space-around;
+        padding: 10px;
+
+        font-weight: 600;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        border-bottom: 2px solid var(--amd-primary-light);
+    }
+
+    .chat-tabs .tab {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--amd-chat-tab-inactive-color);
+        background: none;
+        border: none;
+        position: relative;
+        cursor: pointer;
+    }
+
+    .chat-tabs .tab.active {
+        color: var(--amd-chat-tab-active-color);
+    }
+
+    .chat-tabs .tab.active::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 28px;
+        height: 2px;
+        background: var(--amd-chat-tab-active-color);
+        border-radius: 4px;
+    }
+
+    /* ========== Chat List ========== */
+    .chat-list {
+        padding: 14px 16px;
+        flex-grow: 1;
+        overflow-y: auto;
+        max-height: 320px;
+    }
+
+    .chat-list::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .chat-list::-webkit-scrollbar-thumb {
+        background: var(--amd-chat-list-scrollbar-thumb);
+        border-radius: 10px;
+    }
+
+    /* ========== Message Cards ========== */
+    .chat-card {
+        display: flex;
+        align-items: center;
+        background: var(--amd-chat-card-bg);
+        border-radius: 16px;
+        cursor: pointer;
+        padding: 10px 14px;
+        margin-bottom: 12px;
+        box-shadow: 0 4px 10px var(--amd-chat-card-shadow);
+        transition: all 0.3s ease;
+    }
+
+    .chat-card:hover {
+        background: var(--amd-chat-card-hover-bg);
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 12px 24px var(--amd-chat-card-hover-shadow-primary),
+            0 4px 8px var(--amd-chat-card-hover-shadow-secondary);
+        transition: all 0.3s ease;
+    }
+
+    .avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        margin-right: 12px;
+        object-fit: cover;
+    }
+
+    .chat-info {
+        flex: 1;
+    }
+
+    .chat-name-role {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 2px;
+    }
+
+    .name {
+        font-size: 0.9rem;
+        color: var(--amd-chat-info-text-color);
+        font-weight: 600;
+    }
+
+    .role {
+        font-size: 0.6rem;
+        padding: 2px 6px;
+        border-radius: 10px;
+        font-weight: 500;
+        color: var(--amd-button-text-color);
+        text-transform: uppercase;
+    }
+
+    .green {
+        background: #38d39f;
+    }
+
+    .orange {
+        background: #ff9f43;
+    }
+
+    .pink {
+        background: #ff6b81;
+    }
+
+    .purple {
+        background: #a28cff;
+    }
+
+    .chat-msg {
+        font-size: 0.8rem;
+        color: var(--amd-chat-msg-color);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .chat-date {
+        font-size: 0.7rem;
+        color: var(--amd-chat-date-color);
+        margin-left: 10px;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    /* ========== Bottom Navigation ========== */
+    .chat-nav {
+        display: flex;
+        justify-content: space-around;
+        padding: 22px 0;
+        border-top-left-radius: 22px;
+        border-top-right-radius: 20px;
+        border-top: 2px solid var(--amd-primary-light);
+        background: transparent;
+    }
+
+    .chat-nav i {
+        font-size: 1.3rem;
+        color: var(--amd-chat-nav-icon-color);
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .chat-nav i:hover {
+        color: var(--amd-chat-nav-icon-hover-color);
+    }
+
+    .chat-nav .active-icon {
+        color: var(--amd-chat-nav-icon-active-color);
+    }
+
+    @media (max-width: 576px) {
+        .notification-panel {
+            top: 50px;
+            right: -10px;
+            width: 66vw;
+            height: 1000%;
+            border-radius: 16px;
+        }
+
+        .chat-header h2 {
+            font-size: 0.8rem;
+        }
+
+        .chat-search {
+            font-size: 0.6rem;
+            padding: 8px 12px;
+        }
+
+        .chat-tabs .tab {
+            font-size: 0.55rem;
+        }
+
+        .chat-list {
+            max-height: calc(90vh - 200px);
+            padding: 5px;
+        }
+
+        .chat-card {
+            padding: 5px 10px;
+            margin-bottom: 10px;
+        }
+
+        .avatar {
+            width: 26px;
+            height: 26px;
+        }
+
+        .name {
+            font-size: 0.55rem;
+        }
+
+        .role {
+            font-size: 0.45rem;
+        }
+
+        .chat-msg {
+            font-size: 0.65rem;
+        }
+
+        .chat-date {
+            font-size: 0.65rem;
+        }
+
+        .chat-nav {
+            padding: 12px 0;
+        }
+
+        .chat-nav i {
+            font-size: 1rem;
+        }
+    }
+    /* updated notification end */
+    .chat-msg {
+        font-size: 0.65rem;
+    }
+
+    .chat-date {
+        font-size: 0.65rem;
+    }
+
+    .chat-nav {
+        padding: 12px 0;
+    }
+
+    .chat-nav i {
+        font-size: 1rem;
+    }
+}
+/* updated notification end */
+
+/* End Notification */
+.amd-top-icons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-left: 20px;
+}
+
+.amd-top-icons i {
+    font-size: 18px;
+    cursor: pointer;
+    position: relative;
+    color: var(--amd-text-color);
+}
+
+.amd-profile-section {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.amd-profile-dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    width: 180px;
+    display: none;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.amd-profile-dropdown .dropdown-item {
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.amd-profile-dropdown .dropdown-item:hover {
+    background-color: var(--amd-sidebar-hover-bg);
+    color: var(--amd-primary-color);
+    font-weight: 500;
+}
+
+.amd-profile-dropdown .dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.amd-profile-imgs {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--amd-avatar-border-color);
+    margin-right: 8px;
+}
+
+/* --- AMD Main Content Area Padded Section --- */
+.amd-dashboard-content-area {
+    flex-grow: 1;
+    padding: 5px;
+    background-color: var(--amd-light-bg);
+}
+
+/* --- AMD Card Styles --- */
+.amd-card {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 4px 10px var(--amd-shadow-color);
+    margin-bottom: 20px;
+}
+
+.amd-card-header {
+    background-color: var(--amd-dark-bg);
+    border-bottom: 1px solid var(--amd-border-color);
+    font-weight: 600;
+    color: var(--amd-text-color);
+    padding: 15px 20px;
+    font-size: 1.1rem;
+}
+
+.amd-data-card {
+    background-color: var(--amd-dark-bg);
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px;
+}
+
+.amd-data-card i {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: var(--amd-secondary-color);
+}
+
+.amd-data-card h4 {
+    font-size: 2.2rem;
+    margin-bottom: 5px;
+    color: var(--amd-primary-color);
+    font-weight: 700;
+}
+
+.amd-data-card p {
+    color: var(--amd-grey-text);
+    /* Using new variable */
+    font-size: 0.95rem;
+    margin-bottom: 0;
+}
+
+.amd-list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-color: var(--amd-border-color);
+    /* Using existing variable */
+}
+
+.amd-list-group-item:last-child {
+    border-bottom: none;
+}
+
+/* --- AMD Mobile Responsiveness --- */
+@media (max-width: 768px) {
+    .amd-sidebar {
+        width: 0;
+        box-shadow: none;
+    }
+
+    .amd-sidebar.mobile-open {
+        width: 230px;
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.25);
+        position: fixed;
+    }
+
+    .amd-sidebar .close-btn {
+        display: block !important;
+    }
+
+    .amd-main-content {
+        margin-left: 0 !important;
+    }
+
+    .amd-topbar .amd-top-icons {
+        margin-left: auto;
+    }
+
+    .amd-topbar .amd-page-title {
+        display: none;
+    }
+
+    .amd-profile-section span {
+        display: none;
+    }
+}
+
+/* For screens smaller than 576px */
+@media (max-width: 576px) {
+    .amd-topbar .amd-top-icons {
+        gap: 10px;
+    }
+
+    .amd-topbar .form-select-sm {
+        display: none;
+    }
+
+    .amd-topbar .amd-toggle-btn {
+        margin-right: 5px;
+    }
+}
+
+/* AMD Overlay for mobile sidebar */
+.amd-sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1045;
+    display: none;
+}
+
+/* Dropdown Submenu */
+.dropdown-submenu {
+    position: relative;
+}
+
+.amd-dropdown-category {
+    border: 1px solid var(--amd-border-color);
+}
+
+.amd-dropdown-category:hover {
+    background: var(--amd-primary-color);
+}
+
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -0.125rem;
+    margin-left: 0;
+    border-radius: 0.25rem;
+    display: none;
+    position: absolute;
+}
+
+.dropdown-submenu > a::after {
+    content: "\f0da";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    float: right;
+    margin-left: 10px;
+    margin-top: 2px;
+    font-size: 0.65rem;
+    color: var(--amd-dropdown-arrow-color);
+    opacity: 0.8;
+}
+
+.dropdown-submenu > a:hover::after {
+    transform: translateX(2px);
+    transition: transform 0.2s ease;
+}
+
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu .dropdown-item {
+    font-size: 0.95rem;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-submenu .dropdown-item:hover {
+    background-color: var(--amd-dropdown-item-hover-bg);
+    color: var(--amd-dropdown-item-hover-color);
+}
+
+/**************************************
+👨‍💻 AMD Soft Table Styles – All the Good Stuff 💻
+----------------------------------------------
+What’s included?
+- 🔍 Search Bar
+- 📄 Pagination
+- 📊 Main Table Layout
+  ├── ⚙️ Row Actions (edit, delete, etc.)
+  ├── 🧠 Table Head (columns & labels)
+  ├── 📥 Table Body (all the data)
+  └── 🧾 Table Footer (totals, nav, etc.)
+
+Stay clean. Stay styled. 💅
+**************************************/
+
+/* ************ */
+/* table2 css */
+.amd-soft-table-header,
+.amd-soft-table-wrapper {
+    width: 100%;
+    padding: 0.5rem;
+    box-sizing: border-box;
+    background: #fff;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+    /* margin-bottom: 1.5rem; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    /* border-bottom: 1px solid #dee2e6; */
+}
+
+.amd-soft-subheader {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.amd-soft-table-header h1 {
+    flex: 1 1 auto;
+    min-width: 150px;
+}
+
+.amd-soft-header-right {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    flex: 1 1 auto;
+    justify-content: flex-end;
+    min-width: 220px;
+}
+
+.amd-soft-btn {
+    padding: 10px 18px;
+    background: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.25s ease;
+    user-select: none;
+}
+
+.amd-soft-btn:hover {
+    background-color: #084cd6;
+}
+
+.amd-soft-subheader .row-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #6c757d;
+    min-width: 150px;
+}
+
+.amd-soft-subheader select.form-select {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    font-size: 14px;
+    cursor: pointer;
+    min-width: 75px;
+    background: white;
+    color: #212529;
+}
+
+.row-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #6c757d;
+}
+
+.row-selector select {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    font-size: 14px;
+    background: white;
+}
+
+.search-wrapper {
+    position: relative;
+    width: 250px;
+    max-width: 100%;
+}
+
+.search-wrapper input[type="search"] {
+    width: 100%;
+    padding: 10px 40px 10px 40px;
+    /* left and right padding for icon and spacing */
+    border: 1.5px solid #ced4da;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    outline-offset: 2px;
+    color: #212529;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgb(0 0 0 / 0.07);
+}
+
+.search-wrapper input[type="search"]::placeholder {
+    color: #999;
+    font-style: italic;
+}
+
+.search-wrapper input[type="search"]:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 8px rgba(13, 110, 253, 0.4);
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    color: #6c757d;
+    font-size: 18px;
+    pointer-events: none;
+    user-select: none;
+    transition: color 0.3s ease;
+}
+
+.search-wrapper input[type="search"]:focus + .search-icon {
+    color: #0d6efd;
+}
+
+.amd-soft-table-wrapper {
+    overflow-x: auto;
+    border-radius: 10px;
+}
+
+table.amd-soft-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+    font-size: 14px;
+}
+
+table.amd-soft-table thead {
+    background-color: #e9ecef;
+    text-align: left;
+}
+
+table.amd-soft-table th,
+table.amd-soft-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: middle;
+    color: #495057;
+    white-space: nowrap;
+}
+
+table.amd-soft-table th:first-child,
+table.amd-soft-table td:first-child {
+    width: 40px;
+    text-align: center;
+}
+
+table.amd-soft-table input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+table.amd-soft-table tbody tr:hover {
+    background-color: #f1f3f5;
+    transition: background-color 0.3s ease;
+}
+
+.amd-soft-status {
+    padding: 5px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-block;
+    text-align: center;
+    min-width: 75px;
+}
+
+.amd-soft-status.active {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.amd-soft-status.pending {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+.amd-soft-status.cancelled {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.amd-soft-status.delay {
+    background-color: #d6d8f9;
+    color: #3b2e6a;
+}
+
+.amd-soft-table td i {
+    cursor: pointer;
+    margin-right: 14px;
+    color: #6c757d;
+    font-size: 16px;
+    transition: color 0.25s ease;
+    user-select: none;
+}
+
+.amd-soft-table td i:last-child {
+    margin-right: 0;
+}
+
+.amd-soft-table td i:hover {
+    color: #0d6efd;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .amd-soft-table-header,
+    .amd-soft-subheader,
+    .amd-soft-table-wrapper {
+        padding: 0.5rem;
+    }
+
+    .amd-soft-header-right,
+    .amd-soft-subheader {
+        /* justify-content: center !important; */
+    }
+
+    .search-input input {
+        width: 100%;
+        max-width: 200px;
+    }
+
+    table.amd-soft-table {
+        min-width: 700px;
+    }
+}
+
+@media (max-width: 480px) {
+    table.amd-soft-table {
+        min-width: 600px;
+    }
+}
+
+/* end table2 ************ */
+
+/* ********************** */
+/* table1 css */
+/* ************************** */
+
+.amd-soft-table1-container {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+    overflow: hidden;
+    position: relative;
+}
+
+.amd-soft-table1-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+}
+
+.amd-soft-table1-left-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.amd-soft-table1-filter-btn {
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.amd-soft-table1-filter-btn:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+}
+
+.amd-soft-table1-filter-btn.active {
+    background: #3b82f6;
+    color: #ffffff;
+    border-color: #3b82f6;
+}
+
+.amd-soft-table1-search-container {
+    position: relative;
+}
+
+.amd-soft-table1-search-input {
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    padding: 8px 16px 8px 40px;
+    border-radius: 8px;
+    font-size: 14px;
+    width: 280px;
+    color: #374151;
+    transition: all 0.2s ease;
+}
+
+.amd-soft-table1-search-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.amd-soft-table1-search-input::placeholder {
+    color: #9ca3af;
+}
+
+.amd-soft-table1-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+.amd-soft-table1-new-btn {
+    background: #3b82f6;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.amd-soft-table1-new-btn:hover {
+    background: #2563eb;
+}
+
+/* Filter Panel */
+.amd-soft-table1-filter-panel {
+    position: absolute;
+    top: 80px;
+    left: 24px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    width: 280px;
+    z-index: 1000;
+    display: none;
+}
+
+.amd-soft-table1-filter-panel.show {
+    display: block;
+}
+
+.amd-soft-table1-filter-group {
+    margin-bottom: 16px;
+}
+
+.amd-soft-table1-filter-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+}
+
+.amd-soft-table1-filter-select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #374151;
+    background: #ffffff;
+}
+
+.amd-soft-table1-filter-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.amd-soft-table1-filter-clear {
+    flex: 1;
+    padding: 8px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #374151;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.amd-soft-table1-filter-apply {
+    flex: 1;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    background: #3b82f6;
+    color: #ffffff;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Table Container with Horizontal Scroll */
+.amd-soft-table1-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Custom Scrollbar */
+.amd-soft-table1-table-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.amd-soft-table1-table-container::-webkit-scrollbar-track {
+    background: #f1f3f4;
+    border-radius: 4px;
+}
+
+.amd-soft-table1-table-container::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+}
+
+.amd-soft-table1-table-container::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
+.amd-soft-table1-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    min-width: 800px;
+    /* Minimum width to ensure proper layout */
+}
+
+.amd-soft-table1-table thead th {
+    background: #ffffff;
+    padding: 16px 24px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #e5e7eb;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.amd-soft-table1-table thead th:hover {
+    background: #f9fafb;
+}
+
+.amd-soft-table1-table thead th.sortable::after {
+    content: "\f0dc";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.4;
+    font-size: 12px;
+}
+
+.amd-soft-table1-table thead th.sort-asc::after {
+    content: "\f0de";
+    opacity: 0.8;
+    color: #3b82f6;
+}
+
+.amd-soft-table1-table thead th.sort-desc::after {
+    content: "\f0dd";
+    opacity: 0.8;
+    color: #3b82f6;
+}
+
+.amd-soft-table1-table tbody td {
+    padding: 16px 24px;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 14px;
+    color: #374151;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.amd-soft-table1-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.amd-soft-table1-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+.amd-soft-table1-table tbody tr.hidden {
+    display: none;
+}
+
+.amd-soft-table1-vehicle-name {
+    font-weight: 600;
+    color: #111827;
+    min-width: 120px;
+}
+
+.amd-soft-table1-group {
+    color: #6b7280;
+    min-width: 100px;
+}
+
+.amd-soft-table1-type {
+    color: #374151;
+    min-width: 80px;
+}
+
+.amd-soft-table1-license {
+    color: #374151;
+    font-family: "Monaco", "Menlo", monospace;
+    min-width: 120px;
+}
+
+.amd-soft-table1-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+    min-width: 100px;
+    justify-content: center;
+}
+
+.amd-soft-table1-status.active {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.amd-soft-table1-status.need-repair {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.amd-soft-table1-status.maintenance {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.amd-soft-table1-actions {
+    text-align: center;
+    position: relative;
+    min-width: 60px;
+}
+
+.amd-soft-table1-menu-btn {
+    background: none;
+    border: none;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #9ca3af;
+    transition: all 0.2s ease;
+}
+
+.amd-soft-table1-menu-btn:hover {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+/* Action Menu Dropdown */
+.amd-soft-table1-action-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    min-width: 150px;
+    z-index: 1000;
+    display: none;
+}
+
+.amd-soft-table1-action-menu.show {
+    display: block;
+}
+
+.amd-soft-table1-action-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #374151;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+}
+
+.amd-soft-table1-action-item:hover {
+    background: #f9fafb;
+}
+
+.amd-soft-table1-action-item.danger {
+    color: #dc2626;
+}
+
+.amd-soft-table1-action-item.danger:hover {
+    background: #fef2f2;
+}
+
+/* Empty State */
+.amd-soft-table1-empty {
+    text-align: center;
+    padding: 48px 24px;
+    color: #6b7280;
+}
+
+.amd-soft-table1-empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+/* Scroll Indicator */
+.amd-soft-table1-scroll-indicator {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.8), transparent);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.amd-soft-table1-scroll-indicator.show {
+    opacity: 1;
+}
+
+/* Responsive Design - No column hiding, just better spacing */
+@media (max-width: 1200px) {
+    .amd-soft-table1-container {
+        margin: 15px;
+    }
+}
+
+@media (max-width: 992px) {
+    .amd-soft-table1-table thead th,
+    .amd-soft-table1-table tbody td {
+        padding: 12px 16px;
+    }
+
+    .amd-soft-table1-search-input {
+        width: 220px;
+    }
+
+    .amd-soft-table1-table {
+        min-width: 700px;
+    }
+}
+
+@media (max-width: 768px) {
+    .amd-soft-table1-header {
+        flex-direction: column;
+        gap: 16px;
+        align-items: stretch;
+    }
+
+    .amd-soft-table1-left-controls {
+        justify-content: space-between;
+    }
+
+    .amd-soft-table1-search-input {
+        width: 180px;
+    }
+
+    .amd-soft-table1-table {
+        font-size: 13px;
+        min-width: 600px;
+    }
+
+    .amd-soft-table1-table thead th,
+    .amd-soft-table1-table tbody td {
+        padding: 10px 12px;
+    }
+
+    .amd-soft-table1-filter-panel {
+        left: 12px;
+        right: 12px;
+        width: auto;
+    }
+
+    /* Reduce minimum widths for mobile */
+    .amd-soft-table1-vehicle-name {
+        min-width: 100px;
+    }
+
+    .amd-soft-table1-group {
+        min-width: 80px;
+    }
+
+    .amd-soft-table1-type {
+        min-width: 60px;
+    }
+
+    .amd-soft-table1-license {
+        min-width: 100px;
+    }
+
+    .amd-soft-table1-status {
+        min-width: 80px;
+    }
+}
+
+@media (max-width: 576px) {
+    .amd-soft-table1-container {
+        margin: 10px;
+        border-radius: 8px;
+    }
+
+    .amd-soft-table1-header {
+        padding: 16px;
+    }
+
+    .amd-soft-table1-left-controls {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .amd-soft-table1-search-input {
+        width: 100%;
+    }
+
+    .amd-soft-table1-table {
+        min-width: 500px;
+        font-size: 12px;
+    }
+
+    .amd-soft-table1-table thead th,
+    .amd-soft-table1-table tbody td {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .amd-soft-table1-vehicle-name {
+        font-size: 13px;
+        min-width: 90px;
+    }
+
+    .amd-soft-table1-status {
+        font-size: 11px;
+        padding: 3px 8px;
+        min-width: 70px;
+    }
+
+    /* Further reduce minimum widths for small mobile */
+    .amd-soft-table1-group {
+        min-width: 70px;
+    }
+
+    .amd-soft-table1-type {
+        min-width: 50px;
+    }
+
+    .amd-soft-table1-license {
+        min-width: 90px;
+    }
+}
+
+@media (max-width: 480px) {
+    .amd-soft-table1-table {
+        min-width: 450px;
+    }
+
+    .amd-soft-table1-table thead th,
+    .amd-soft-table1-table tbody td {
+        padding: 6px 8px;
+    }
+
+    /* Minimal widths for very small screens */
+    .amd-soft-table1-vehicle-name {
+        min-width: 80px;
+    }
+
+    .amd-soft-table1-group {
+        min-width: 60px;
+    }
+
+    .amd-soft-table1-type {
+        min-width: 45px;
+    }
+
+    .amd-soft-table1-license {
+        min-width: 80px;
+    }
+
+    .amd-soft-table1-status {
+        min-width: 60px;
+    }
+
+    .amd-soft-table1-actions {
+        min-width: 40px;
+    }
+}
+
+/* Loading State */
+.amd-soft-table1-loading {
+    text-align: center;
+    padding: 48px 24px;
+    color: #6b7280;
+}
+
+.amd-soft-table1-spinner {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border: 3px solid #e5e7eb;
+    border-radius: 50%;
+    border-top-color: #3b82f6;
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 16px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ***********end table1************* */
+
+/* ********************************* */
+/* table 3 css  */
+
+/* Custom CSS with amd-soft-table3 prefix */
+
+.amd-soft-table3-container {
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    padding: 1rem;
+}
+
+/* Responsive adjustments for container margin on small screens */
+@media (max-width: 767.98px) {
+    .amd-soft-table3-container {
+        margin: 0.5rem;
+        padding: 1rem;
+    }
+}
+
+.amd-soft-table3-header {
+    display: flex;
+    flex-wrap: wrap;
+    /* Allow items to wrap */
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+    /* Space between items when wrapping */
+}
+
+.amd-soft-table3-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #343a40;
+}
+
+.amd-fillter-card {
+    background-color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.amd-fillter-card .form-control,
+.amd-fillter-card .form-select {
+    background-color: #e6e6e6;
+    border: none;
+    color: #000000;
+}
+
+.amd-fillter-card .form-control::placeholder {
+    color: #aaa;
+}
+
+.amd-fillter-card label {
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.amd-fillter-card .btn {
+    transition: all 0.3s ease;
+}
+
+.amd-fillter-card .btn:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+}
+
+.amd-soft-table3-search-new-flow {
+    display: flex;
+    flex-wrap: wrap;
+    /* Allow items to wrap */
+    align-items: center;
+    gap: 1rem;
+    flex-grow: 1;
+    /* Allow it to take available space */
+    justify-content: flex-end;
+    /* Align to end on larger screens */
+}
+
+/* Adjust search and new flow for smaller screens */
+@media (max-width: 767.98px) {
+    .amd-soft-table3-search-new-flow {
+        width: 100%;
+        /* Take full width */
+        justify-content: center;
+        /* Center items */
+    }
+}
+
+.amd-soft-table3-search-input {
+    position: relative;
+    flex-grow: 1;
+    /* Allow search input to grow */
+    max-width: 16rem;
+    /* Max width for search input */
+}
+
+/* Adjust search input width for smaller screens */
+@media (max-width: 767.98px) {
+    .amd-soft-table3-search-input {
+        max-width: 100%;
+        /* Take full width on small screens */
+    }
+}
+
+.amd-soft-table3-search-input .amd-soft-table3-search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #adb5bd;
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.amd-soft-table3-search-input input {
+    padding-left: 2.5rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-radius: 0.375rem;
+    border: 1px solid #ced4da;
+    width: 100%;
+    /* Make it responsive */
+    outline: none;
+    box-shadow: none;
+}
+
+.amd-soft-table3-search-input input:focus {
+    border-color: #e9ecef;
+    box-shadow: 0 0 0 0.25rem rgba(233, 236, 239, 0.5);
+}
+
+.amd-soft-table3-new-flow-button {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 0.5rem 1.5rem;
+    border-radius: 0.375rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    white-space: nowrap;
+    /* Prevent button text from wrapping */
+}
+
+.amd-soft-table3-new-flow-button:hover {
+    background-color: #343a40;
+}
+
+.amd-soft-table3-control-bar {
+    display: flex;
+    flex-wrap: wrap;
+    /* Allow items to wrap */
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    gap: 0.75rem;
+    /* Space between items when wrapping */
+}
+
+.amd-soft-table3-dropdown-filter {
+    display: flex;
+    flex-wrap: wrap;
+    /* Allow items to wrap */
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.amd-soft-table3-button-outline {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    border: 1px solid #ced4da;
+    background-color: transparent;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    white-space: nowrap;
+    /* Prevent button text from wrapping */
+}
+
+.amd-soft-table3-button-outline:hover {
+    background-color: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+.amd-soft-table3-button-outline svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+.amd-soft-table3-table-wrapper {
+    border: 1px solid #e9ecef;
+    border-radius: 0.5rem;
+
+    /* Ensure rounded corners are applied */
+}
+
+.amd-soft-table3-columns {
+    background-color: var(--amd-chat-msg-color);
+    width: 200px;
+}
+
+#amd-soft-table3-column-toggles .form-check-input {
+    background-color: transparent;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+#amd-soft-table3-column-toggles .form-check-input:checked {
+    background-color: var(--amd-primary);
+    border-color: var(--amd-primary);
+}
+
+#amd-soft-table3-column-toggles li:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+}
+
+/* Bootstrap's .table-responsive handles horizontal scrolling for tables */
+.table-responsive > .amd-soft-table3-table {
+    margin-bottom: 0;
+    /* Remove default table margin */
+}
+
+.amd-soft-table3-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.amd-soft-table3-table-header {
+    background-color: #f8f9fa;
+}
+
+.amd-soft-table3-table-head {
+    text-align: left;
+    color: #6c757d;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    white-space: nowrap;
+    cursor: pointer;
+    /* Make headers clickable for sorting */
+}
+
+.amd-soft-table3-table-head.amd-soft-table3-non-sortable {
+    cursor: default;
+    /* Remove pointer for non-sortable headers */
+}
+
+.amd-soft-table3-table-head .amd-soft-table3-sort-icon {
+    width: 1rem;
+    height: 1rem;
+    color: #adb5bd;
+    margin-left: 0.25rem;
+    transition: transform 0.2s ease-in-out;
+}
+
+.amd-soft-table3-table-head.amd-soft-table3-sorted-asc
+    .amd-soft-table3-sort-icon {
+    transform: rotate(180deg);
+    /* Point up for ascending */
+    color: #343a40;
+    /* Darker color when sorted */
+}
+
+.amd-soft-table3-table-head.amd-soft-table3-sorted-desc
+    .amd-soft-table3-sort-icon {
+    transform: rotate(0deg);
+    /* Point down for descending */
+    color: #343a40;
+    /* Darker color when sorted */
+}
+
+.amd-soft-table3-table-row {
+    border-bottom: 1px solid #f1f3f5;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.amd-soft-table3-table-row:hover {
+    background-color: #f8f9fa;
+}
+
+.amd-soft-table3-table-row.amd-soft-table3-selected {
+    background-color: #f8f9fa;
+    /* Highlight selected row */
+}
+
+.amd-soft-table3-table-cell {
+    padding: 0.75rem 1rem;
+    color: #495057;
+    white-space: nowrap;
+    /* Prevent cell content from wrapping */
+}
+
+.amd-soft-table3-table-cell.amd-soft-table3-name-cell {
+    font-weight: 500;
+    color: #343a40;
+}
+
+.amd-soft-table3-checkbox {
+    width: 1rem;
+    height: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.amd-soft-table3-checkbox:checked {
+    background-color: #000000;
+    border-color: #000000;
+}
+
+.amd-soft-table3-checkbox:checked::after {
+    content: "";
+    position: absolute;
+    left: 0.25rem;
+    top: 0.05rem;
+    width: 0.3rem;
+    height: 0.6rem;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.amd-soft-table3-status-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.amd-soft-table3-status-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+}
+
+.amd-soft-table3-status-text {
+    color: #495057;
+}
+
+.amd-soft-table3-status-pending {
+    background-color: #fd7e14;
+}
+
+/* Orange */
+.amd-soft-table3-status-active {
+    background-color: #28a745;
+}
+
+/* Green */
+.amd-soft-table3-status-cancelled {
+    background-color: #dc3545;
+}
+
+/* Red */
+
+.amd-soft-table3-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.amd-soft-table3-action-button {
+    background-color: transparent;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.amd-soft-table3-action-button:hover {
+    background-color: #e9ecef;
+}
+
+.amd-soft-table3-action-button svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Utility for icons */
+.amd-soft-table3-icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.125em;
+    fill: currentColor;
+}
+
+/* Column visibility classes */
+.amd-soft-table3-hidden-column {
+    display: none !important;
+}
+
+/* Dropdown menu for column management */
+.amd-soft-table3-column-dropdown .dropdown-menu {
+    padding: 0.5rem 1rem;
+}
+
+.amd-soft-table3-column-dropdown .form-check {
+    padding-left: 0;
+    /* Remove default form-check padding */
+}
+
+.amd-soft-table3-column-dropdown .form-check-input {
+    margin-right: 0.5rem;
+    float: none;
+    /* Prevent float from Bootstrap */
+    vertical-align: middle;
+}
+
+.amd-soft-table3-column-dropdown .form-check-label {
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+/* **********table3 end*********** */
+
+/* *******************
+table4 /*
+
+/* Custom amd-table4-card Styling */
+.amd-table4-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 0.5rem;
+}
+
+.amd-table4-card-body {
+    padding: 1.5rem;
+}
+
+.amd-table4-icon-wrapper {
+    background-color: #f0f2f5;
+    /* Light background for icons */
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    color: #6c757d;
+    /* Muted icon color */
+}
+
+/* Search Input Styling */
+.amd-table4-search-input-group {
+    max-width: 300px;
+    /* Limit search input width */
+    border: 1px solid #e0e0e0;
+    border-radius: 0.375rem;
+    overflow: hidden;
+    /* Ensures border-radius applies to children */
+}
+
+.amd-table4-search-input-group .form-control,
+.amd-table4-search-input-group .input-group-text {
+    background-color: #fff;
+    border: none;
+}
+
+.amd-table4-search-input-group .form-control:focus {
+    box-shadow: none;
+}
+
+/* Table Styling */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    font-weight: 600;
+    color: #6c757d;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    vertical-align: middle;
+}
+
+.table tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+    /* Lighter border for rows */
+}
+
+.table tbody tr:last-child {
+    border-bottom: none;
+    /* No border for the last row */
+}
+
+.table tbody td {
+    padding: 1rem 0.75rem;
+    vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f5f5f5;
+    /* Lighter hover effect */
+}
+
+/* Status Badges */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35em 0.7em;
+    border-radius: 1rem;
+    /* Pill shape */
+    font-weight: 500;
+    font-size: 0.85em;
+}
+
+.amd-table4-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 0.4em;
+    display: inline-block;
+}
+
+.amd-table4-status-active {
+    background-color: #e6f7ed;
+    /* Light green background */
+    color: #28a745;
+    /* Green text */
+}
+
+.amd-table4-status-dot.active {
+    background-color: #28a745;
+    /* Green dot */
+}
+
+.amd-table4-status-inactive {
+    background-color: #fdecec;
+    /* Light red background */
+    color: #dc3545;
+    /* Red text */
+}
+
+.amd-table4-status-dot.inactive {
+    background-color: #dc3545;
+    /* Red dot */
+}
+
+/* Tag Badges */
+.amd-table4-tag-badge {
+    background-color: #f0f2f5;
+    /* Light gray background */
+    color: #6c757d;
+    /* Muted text color */
+    padding: 0.35em 0.7em;
+    border-radius: 1rem;
+    font-weight: 500;
+    font-size: 0.85em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .d-flex.justify-content-between.align-items-center.mb-3 {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .d-flex.gap-2 {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .d-flex.gap-2 .btn {
+        flex-grow: 1;
+    }
+
+    .d-flex.flex-column.flex-md-row {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+
+    .amd-table4-search-input-group {
+        max-width: 100%;
+    }
+}
+
+/* table4 end */
+
+/* *********table6 */
+
+.amd-table6-container {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin: 20px;
+}
+
+.amd-table6-header {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    padding: 15px 20px;
+}
+
+.amd-table6-tabs {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 0;
+}
+
+.amd-table6-tab {
+    background: none;
+    border: none;
+    padding: 8px 0;
+    font-weight: 500;
+    color: #6c757d;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.amd-table6-tab.active {
+    color: #495057;
+    border-bottom-color: #007bff;
+}
+
+.amd-table6-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.amd-table6-btn {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.amd-table6-btn:hover {
+    background: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+.amd-table6-search-input {
+    border: 1px solid #dee2e6;
+    padding: 8px 12px;
+    border-radius: 6px;
+    width: 200px;
+    font-size: 14px;
+}
+
+.amd-table6-table {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.amd-table6-table th {
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    padding: 15px 20px;
+    font-weight: 600;
+    color: #495057;
+    font-size: 14px;
+    cursor: pointer;
+    position: relative;
+}
+
+.amd-table6-table th:hover {
+    background: #e9ecef;
+}
+
+.amd-table6-table th.sortable::after {
+    content: "\f0dc";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    right: 10px;
+    opacity: 0.3;
+}
+
+.amd-table6-table th.sort-asc::after {
+    content: "\f0de";
+    opacity: 1;
+}
+
+.amd-table6-table th.sort-desc::after {
+    content: "\f0dd";
+    opacity: 1;
+}
+
+.amd-table6-table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid #f1f3f4;
+    vertical-align: middle;
+}
+
+.amd-table6-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.amd-table6-table tbody tr.hidden {
+    display: none;
+}
+
+.amd-table6-product {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.amd-table6-product-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    object-fit: cover;
+    border: 1px solid #dee2e6;
+}
+
+.amd-table6-product-name {
+    font-weight: 500;
+    color: #495057;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.amd-table6-price {
+    font-weight: 600;
+    color: #495057;
+}
+
+.amd-table6-shop {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.amd-table6-shop-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.amd-table6-shop-name {
+    font-weight: 500;
+    color: #495057;
+}
+
+.amd-table6-progress-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.amd-table6-progress {
+    flex: 1;
+    height: 6px;
+    background: #e9ecef;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.amd-table6-progress-bar {
+    height: 100%;
+    background: #007bff;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.amd-table6-progress-text {
+    font-size: 12px;
+    font-weight: 500;
+    color: #6c757d;
+    min-width: 25px;
+}
+
+.amd-table6-revenue {
+    font-weight: 600;
+    color: #495057;
+}
+
+.amd-table6-footer {
+    background: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.amd-table6-pagination {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.amd-table6-page-btn {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.amd-table6-page-btn:hover {
+    background: #f8f9fa;
+}
+
+.amd-table6-page-btn.active {
+    background: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+.amd-table6-page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.amd-table6-info {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.amd-table6-per-page {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.amd-table6-per-page select {
+    border: 1px solid #dee2e6;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: #fff;
+}
+
+/* Shop indicator colors */
+.amd-table6-indicator-blue {
+    background: #007bff;
+}
+
+.amd-table6-indicator-red {
+    background: #dc3545;
+}
+
+.amd-table6-indicator-green {
+    background: #28a745;
+}
+
+.amd-table6-indicator-orange {
+    background: #fd7e14;
+}
+
+.amd-table6-indicator-purple {
+    background: #6f42c1;
+}
+
+.amd-table6-indicator-teal {
+    background: #20c997;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .amd-table6-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .amd-table6-actions {
+        flex-wrap: wrap;
+    }
+
+    .amd-table6-search-input {
+        width: 150px;
+    }
+
+    .amd-table6-footer {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+/* **********end table6 */
+
+/* ***************** */
+/* table7 */
+
+.amd-table7-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin: 10px;
+    width: calc(100% - 20px);
+}
+
+.amd-table7-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.amd-table7-header-left {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    flex: 1;
+    min-width: 0;
+}
+
+.amd-table7-header-right {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.amd-table7-dropdown {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 8px 12px;
+    background: white;
+    font-size: 14px;
+    min-width: 120px;
+    max-width: 100%;
+}
+
+.amd-table7-btn-primary {
+    background: #6366f1;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 500;
+    font-size: 14px;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+.amd-table7-btn-primary:hover {
+    background: #5855eb;
+}
+
+.amd-table7-search-input {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    width: 200px;
+    max-width: 100%;
+}
+
+.amd-table7-wrapper {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 #f7fafc;
+}
+
+.amd-table7-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.amd-table7-wrapper::-webkit-scrollbar-track {
+    background: #f7fafc;
+}
+
+.amd-table7-wrapper::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 4px;
+}
+
+.amd-table7-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+}
+
+.amd-table7-data-table {
+    margin: 0;
+    width: 100%;
+    min-width: 800px;
+}
+
+.amd-table7-data-table thead th {
+    background: #f8f9fa;
+    border: none;
+    padding: 16px 20px;
+    font-weight: 600;
+    font-size: 13px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.amd-table7-data-table tbody td {
+    padding: 16px 20px;
+    border-top: 1px solid #f1f5f9;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.amd-table7-data-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+.amd-table7-company-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 150px;
+}
+
+.amd-table7-company-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: white;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.amd-table7-company-name {
+    font-weight: 600;
+    color: #1f2937;
+    white-space: nowrap;
+}
+
+.amd-table7-status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.amd-table7-status-pending {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.amd-table7-status-leads {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.amd-table7-status-active {
+    background: #d1fae5;
+    color: #059669;
+}
+
+.amd-table7-action-btn {
+    border: none;
+    background: none;
+    color: #6b7280;
+    font-size: 16px;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 32px;
+    min-height: 32px;
+}
+
+.amd-table7-action-btn:hover {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+/* Company logo colors */
+.amd-table7-logo-zendesk {
+    background: #03363d;
+}
+
+.amd-table7-logo-shopify {
+    background: #95bf47;
+}
+
+.amd-table7-logo-stripe {
+    background: #635bff;
+}
+
+.amd-table7-logo-paypal {
+    background: #003087;
+}
+
+.amd-table7-logo-zoom {
+    background: #2d8cff;
+}
+
+.amd-table7-logo-netflix {
+    background: #e50914;
+}
+
+.amd-table7-logo-notion {
+    background: #000000;
+}
+
+.amd-table7-logo-telegram {
+    background: #0088cc;
+}
+
+.amd-table7-logo-whatsapp {
+    background: #25d366;
+}
+
+.amd-table7-logo-zapier {
+    background: #ff4a00;
+}
+
+.amd-table7-logo-spotify {
+    background: #1db954;
+}
+
+/* Responsive Breakpoints */
+
+/* Extra Large Screens (1400px and up) */
+@media (min-width: 1400px) {
+    .amd-table7-container {
+        margin: 20px auto;
+        max-width: 1320px;
+    }
+
+    .amd-table7-header {
+        padding: 20px 30px;
+    }
+
+    .amd-table7-data-table thead th,
+    .amd-table7-data-table tbody td {
+        padding: 18px 25px;
+    }
+
+    .amd-table7-data-table {
+        min-width: 900px;
+    }
+}
+
+/* Large Screens (1200px to 1399px) */
+@media (min-width: 1200px) and (max-width: 1399px) {
+    .amd-table7-container {
+        margin: 15px;
+    }
+
+    .amd-table7-data-table {
+        min-width: 850px;
+    }
+}
+
+/* Medium Screens (992px to 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .amd-table7-header {
+        padding: 15px;
+    }
+
+    .amd-table7-dropdown {
+        min-width: 100px;
+        font-size: 13px;
+    }
+
+    .amd-table7-search-input {
+        width: 180px;
+    }
+
+    .amd-table7-data-table {
+        min-width: 800px;
+    }
+
+    .amd-table7-data-table thead th,
+    .amd-table7-data-table tbody td {
+        padding: 14px 16px;
+    }
+}
+
+/* Small Screens (768px to 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+    .amd-table7-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .amd-table7-header-left,
+    .amd-table7-header-right {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .amd-table7-dropdown {
+        flex: 1;
+        min-width: 0;
+        max-width: 150px;
+    }
+
+    .amd-table7-search-input {
+        flex: 1;
+        min-width: 0;
+        max-width: 200px;
+    }
+
+    .amd-table7-data-table {
+        min-width: 750px;
+    }
+
+    .amd-table7-data-table thead th,
+    .amd-table7-data-table tbody td {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+
+    .amd-table7-company-cell {
+        min-width: 140px;
+    }
+}
+
+/* Extra Small Screens (576px to 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+    .amd-table7-container {
+        margin: 8px;
+        border-radius: 8px;
+    }
+
+    .amd-table7-header {
+        flex-direction: column;
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .amd-table7-header-left {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .amd-table7-header-right {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .amd-table7-dropdown,
+    .amd-table7-search-input {
+        width: 100%;
+        min-width: 0;
+        font-size: 14px;
+    }
+
+    .amd-table7-search-input {
+        grid-column: 1 / -1;
+    }
+
+    .amd-table7-data-table {
+        min-width: 700px;
+    }
+
+    .amd-table7-data-table thead th,
+    .amd-table7-data-table tbody td {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .amd-table7-company-cell {
+        min-width: 130px;
+        gap: 8px;
+    }
+
+    .amd-table7-company-logo {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+    }
+}
+
+/* Mobile Screens (up to 575px) */
+@media (max-width: 575px) {
+    .amd-table7-container {
+        margin: 5px;
+        border-radius: 6px;
+    }
+
+    .amd-table7-header {
+        flex-direction: column;
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .amd-table7-header-left {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .amd-table7-header-right {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .amd-table7-dropdown,
+    .amd-table7-search-input,
+    .amd-table7-btn-primary {
+        width: 100%;
+        min-width: 0;
+        font-size: 14px;
+        padding: 10px 12px;
+    }
+
+    .amd-table7-data-table {
+        min-width: 650px;
+    }
+
+    .amd-table7-data-table thead th,
+    .amd-table7-data-table tbody td {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .amd-table7-company-cell {
+        min-width: 120px;
+        gap: 6px;
+    }
+
+    .amd-table7-company-logo {
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+    }
+
+    .amd-table7-company-name {
+        font-size: 13px;
+    }
+
+    .amd-table7-status-badge {
+        padding: 3px 8px;
+        font-size: 10px;
+    }
+
+    .amd-table7-action-btn {
+        min-width: 28px;
+        min-height: 28px;
+        font-size: 14px;
+    }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .amd-table7-action-btn {
+        padding: 12px;
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    .amd-table7-dropdown,
+    .amd-table7-btn-primary {
+        min-height: 44px;
+    }
+
+    .amd-table7-wrapper {
+        padding-bottom: 10px;
+    }
+}
+
+/* High DPI screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .amd-table7-company-logo {
+        border: 0.5px solid rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* Landscape orientation on mobile */
+@media (max-width: 767px) and (orientation: landscape) {
+    .amd-table7-header-left,
+    .amd-table7-header-right {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .amd-table7-dropdown,
+    .amd-table7-search-input {
+        flex: 1;
+        min-width: 120px;
+    }
+
+    .amd-table7-data-table {
+        min-width: 600px;
+    }
+}
+
+/* Print styles */
+@media print {
+    .amd-table7-container {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        margin: 0;
+    }
+
+    .amd-table7-header {
+        display: none;
+    }
+
+    .amd-table7-wrapper {
+        overflow: visible;
+    }
+
+    .amd-table7-data-table {
+        min-width: 0;
+    }
+
+    .amd-table7-action-btn {
+        display: none;
+    }
+
+    .amd-table7-data-table tbody tr:hover {
+        background-color: transparent;
+    }
+}
+
+/* Scroll indicator for mobile */
+@media (max-width: 991px) {
+    .amd-table7-wrapper::after {
+        content: "← Scroll to see more →";
+        position: absolute;
+        bottom: 5px;
+        right: 20px;
+        font-size: 11px;
+        color: #9ca3af;
+        pointer-events: none;
+        opacity: 0.7;
+    }
+
+    .amd-table7-container {
+        position: relative;
+    }
+}
+
+/* end table8 */
+
+/*employee detail page  */
+
+/* Custom CSS for Employee Detail Page */
+
+/* General Background */
+.amd-employee-detail-bg-light {
+    background-color: #f8f9fa;
+    /* Light gray background */
+}
+
+/* Profile Header */
+.amd-employee-detail-profile-header {
+    height: 120px;
+    /* Adjusted height to match image */
+    background-color: var(--amd-clear-input-btn-color);
+}
+
+.amd-employee-detail-avatar-container {
+    position: absolute;
+    bottom: -48px;
+    /* Half of avatar height to center it */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.amd-employee-detail-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    border: 4px solid white;
+    object-fit: cover;
+}
+
+/* Information Rows */
+.amd-employee-detail-info-list .amd-employee-detail-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    font-size: 0.875rem;
+    /* text-sm equivalent */
+}
+
+.amd-employee-detail-info-list .amd-employee-detail-info-row:not(:last-child) {
+    border-bottom: 1px solid #eee;
+    /* Light border between rows */
+}
+
+/* Dot separator */
+.amd-employee-detail-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin: 0 0.5rem;
+}
+
+/* Collapsible Card Chevron */
+.amd-employee-detail-chevron {
+    transition: transform 0.2s ease-out;
+}
+
+.card-header[aria-expanded="true"] .amd-employee-detail-chevron {
+    transform: rotate(180deg);
+}
+
+/* Tabs */
+.nav-tabs .nav-link {
+    color: #6c757d;
+    /* Muted text color */
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.nav-tabs .nav-link.active {
+    color: #000;
+    /* Darker text for active tab */
+    border-bottom-color: hsl(20, 89%, 54%);
+    /* Orange underline for active tab */
+    background-color: transparent;
+    font-weight: 600;
+}
+
+.nav-tabs .nav-link:hover:not(.active) {
+    border-bottom-color: #e9ecef;
+    /* Light border on hover */
+}
+
+/* Asset Item */
+.amd-employee-detail-asset-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    border: 1px solid #e9ecef;
+    /* Light border */
+    border-radius: 0.375rem;
+    /* Rounded corners */
+    background-color: white;
+    flex-wrap: wrap;
+    /* Allow wrapping on smaller screens */
+    gap: 1rem;
+    /* Space between main sections */
+}
+
+.amd-employee-detail-asset-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 0.375rem;
+    object-fit: cover;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .amd-employee-detail-asset-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .amd-employee-detail-asset-item > div:first-child {
+        width: 100%;
+    }
+
+    .amd-employee-detail-asset-item > div:last-child {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+/* Column Manager Modal */
+/* Bootstrap-style modal centering */
+/* Overlay */
+.amd-table8-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+}
+
+.amd-table8-modal-overlay.show {
+    display: flex;
+}
+
+/* Modal Container */
+.amd-table8-modal {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 500px;
+    max-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Modal Header */
+.amd-table8-modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.amd-table8-modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+.amd-table8-modal-close {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: #6b7280;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.amd-table8-modal-close:hover {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+/* Modal Body */
+.amd-table8-modal-body {
+    padding: 20px 24px;
+    max-height: 400px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* Column List */
+.amd-table8-column-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.amd-table8-column-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    background: #fff;
+    cursor: move;
+    transition: all 0.2s ease;
+}
+
+.amd-table8-column-item:hover {
+    background: #f9fafb;
+    border-color: #d1d5db;
+}
+
+.amd-table8-column-item.dragging {
+    opacity: 0.5;
+    transform: rotate(5deg);
+}
+
+.amd-table8-column-item.drag-over {
+    border-color: #3b82f6;
+    background: #eff6ff;
+}
+
+.amd-table8-column-checkbox {
+    margin-right: 12px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.amd-table8-column-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.amd-table8-column-name {
+    font-weight: 500;
+    color: #111827;
+    font-size: 14px;
+}
+
+.amd-table8-column-key {
+    font-size: 12px;
+    color: #6b7280;
+    font-family: Monaco, Menlo, monospace;
+}
+
+.amd-table8-drag-handle {
+    color: #9ca3af;
+    cursor: move;
+    padding: 4px;
+}
+
+.amd-table8-drag-handle:hover {
+    color: #6b7280;
+}
+
+/* Modal Footer */
+.amd-table8-modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f9fafb;
+}
+
+.amd-table8-modal-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.amd-table8-modal-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.amd-table8-modal-btn.secondary {
+    background: #fff;
+    border: 1px solid #d1d5db;
+    color: #374151;
+}
+
+.amd-table8-modal-btn.secondary:hover {
+    background: #f3f4f6;
+}
+
+.amd-table8-modal-btn.primary {
+    background: #3b82f6;
+    border: 1px solid #3b82f6;
+    color: #fff;
+}
+
+.amd-table8-modal-btn.primary:hover {
+    background: #2563eb;
+}
+
+.amd-table8-reset-btn {
+    background: none;
+    border: none;
+    color: #6b7280;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.amd-table8-reset-btn:hover {
+    color: #374151;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .amd-table8-header,
+    .amd-table8-toolbar,
+    .amd-table8-footer {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    .amd-table8-toolbar-left,
+    .amd-table8-toolbar-right {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .amd-table8-expanded-content {
+        grid-template-columns: 1fr;
+    }
+
+    .amd-table8-modal {
+        width: 95%;
+        margin: 20px;
+    }
+}
+
+/* drag table css*/
+.table-wrapper {
+    display: inline-block;
+    cursor: move;
+}
+.sortable-table tr {
+    transition: background-color 0.3s ease;
+    cursor: grab !important;
+}
+.sortable-table tr:active {
+    cursor: grabbing !important;
+}
+
+.dragtable-drag-handle {
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+/* drag table column css end */
