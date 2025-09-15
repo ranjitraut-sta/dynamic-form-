@@ -24,7 +24,7 @@
                     </div>
                     <div class="card-body">
                         @if($form)
-                        <form id="dynamicForm" action="{{ route('forms.submit', $form->id) }}" method="POST">
+                        <form id="dynamicForm" action="{{ url('f/' . $form->unique_url . '/submit') }}" method="POST">
                         @endif
                             @csrf
                             @if($form && empty($form->fields))

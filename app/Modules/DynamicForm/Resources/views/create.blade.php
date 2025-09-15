@@ -12,7 +12,7 @@
                 <div class="card-body">
                     <form id="formBuilder">
                         <div class="row">
-                            <div class="col-md-8">
+                            <div class="col-md-8" id="formBuilderArea">
                                 <div class="form-group mb-4">
                                     <label class="font-weight-bold text-muted">Form Title</label>
                                     <input type="text" class="form-control rounded-pill form-control-lg" id="formTitle" placeholder="e.g., Contact Us Form" required>
@@ -37,15 +37,29 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4 border-left">
-                                <h5 class="mb-3 font-weight-bold text-dark">Available Fields</h5>
-                                <div id="fieldPalette" class="card shadow-sm p-3">
-                                    Loading fields...
-                                </div>
-                                <div class="mt-3">
-                                    <a href="{{ route('field-types.index') }}" class="btn btn-sm btn-info rounded-pill">
-                                        🔧 Manage Field Types
-                                    </a>
+                            <!-- Collapsible Sidebar -->
+                            <div class="col-md-1">
+                                <button class="btn btn-primary btn-sm" id="toggleSidebar" onclick="toggleFieldPalette()">
+                                    🎨
+                                </button>
+                            </div>
+
+                            <div class="col-md-3" id="fieldSidebar">
+                                <div class="field-sidebar">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="mb-0 font-weight-bold">🎨 Fields</h6>
+                                        <button class="btn btn-sm btn-outline-secondary" onclick="toggleFieldPalette()">×</button>
+                                    </div>
+
+                                    <div id="fieldPalette" class="field-palette-compact">
+                                        Loading fields...
+                                    </div>
+
+                                    <div class="mt-2">
+                                        <a href="{{ route('field-types.index') }}" class="btn btn-xs btn-outline-info btn-block">
+                                            🔧 Manage
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -140,11 +154,108 @@
     border-color: #007bff;
     background: #f0f8ff;
 }
+.field-sidebar {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+}
+.field-palette-compact {
+    max-height: 400px;
+    overflow-y: auto;
+}
+.field-palette-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    padding: 5px;
+}
+.field-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 8px;
+    border-radius: 8px;
+    text-align: center;
+    cursor: grab;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    border: none;
+}
+.field-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+.field-card:active {
+    cursor: grabbing;
+    transform: scale(0.95);
+}
+.field-icon {
+    font-size: 18px;
+    margin-bottom: 4px;
+    opacity: 0.9;
+}
+.field-name {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    line-height: 1.1;
+}
+#fieldSidebar {
+    transition: all 0.3s ease;
+}
+#fieldSidebar.collapsed {
+    margin-left: -100%;
+    opacity: 0;
+}
+#formBuilderArea {
+    transition: all 0.3s ease;
+}
+#formBuilderArea.expanded {
+    flex: 0 0 91.666667%;
+    max-width: 91.666667%;
+}
+#toggleSidebar {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    z-index: 1000;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
 </style>
 
 <script>
 let formFields = [];
 let fieldCounter = 0;
+let sidebarCollapsed = false;
+let dragDropInitialized = false;
+
+function toggleFieldPalette() {
+    const sidebar = document.getElementById('fieldSidebar');
+    const builderArea = document.getElementById('formBuilderArea');
+    const toggleBtn = document.getElementById('toggleSidebar');
+
+    sidebarCollapsed = !sidebarCollapsed;
+
+    if (sidebarCollapsed) {
+        sidebar.classList.add('collapsed');
+        builderArea.classList.add('expanded');
+        toggleBtn.innerHTML = '🎨';
+        toggleBtn.style.right = '20px';
+    } else {
+        sidebar.classList.remove('collapsed');
+        builderArea.classList.remove('expanded');
+        toggleBtn.innerHTML = '✕';
+        toggleBtn.style.right = '320px';
+    }
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     loadFieldPalette();
@@ -156,10 +267,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function loadFieldPalette() {
-    fetch('/admin/field-types-api')
-        .then(response => response.text())
-        .then(html => {
-            document.getElementById('fieldPalette').innerHTML = html;
+    fetch('/admin/field-palette')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('fieldPalette').innerHTML = data.html;
             setupDragDrop();
         })
         .catch(error => {
@@ -169,64 +280,77 @@ function loadFieldPalette() {
 }
 
 function setupDragDrop() {
-    const fieldItems = document.querySelectorAll('.field-item');
+    if (dragDropInitialized) return;
+
+    const fieldItems = document.querySelectorAll('.field-card');
     const dropZone = document.getElementById('formFields');
 
     fieldItems.forEach(item => {
-        item.addEventListener('dragstart', function(e) {
-            e.dataTransfer.setData('text/plain', this.dataset.type);
-        });
+        item.addEventListener('dragstart', handleDragStart);
     });
 
-    dropZone.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        this.classList.add('drag-over');
-    });
+    dropZone.addEventListener('dragover', handleDragOver);
+    dropZone.addEventListener('dragleave', handleDragLeave);
+    dropZone.addEventListener('drop', handleDrop);
 
-    dropZone.addEventListener('dragleave', function(e) {
-        this.classList.remove('drag-over');
-    });
+    dragDropInitialized = true;
+}
 
-    dropZone.addEventListener('drop', function(e) {
-        e.preventDefault();
-        this.classList.remove('drag-over');
-        const fieldType = e.dataTransfer.getData('text/plain');
-        if (fieldType) {
-            addField(fieldType);
-        }
-    });
+function handleDragStart(e) {
+    e.dataTransfer.setData('text/plain', this.dataset.type);
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+    this.classList.add('drag-over');
+}
+
+function handleDragLeave(e) {
+    this.classList.remove('drag-over');
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.classList.remove('drag-over');
+
+    const fieldType = e.dataTransfer.getData('text/plain');
+    if (fieldType && fieldType.trim() !== '') {
+        console.log('Adding field:', fieldType);
+        addField(fieldType);
+    }
 }
 
 function setupFieldDragDrop() {
     const formFields = document.querySelectorAll('.form-field');
     const dropIndicators = document.querySelectorAll('.drop-indicator');
-    
+
     formFields.forEach(field => {
         field.addEventListener('dragstart', function(e) {
             e.dataTransfer.setData('application/json', JSON.stringify({type: 'reorder', fieldId: this.dataset.fieldId}));
             this.classList.add('dragging');
         });
-        
+
         field.addEventListener('dragend', function(e) {
             this.classList.remove('dragging');
             dropIndicators.forEach(indicator => indicator.classList.remove('active'));
         });
     });
-    
+
     dropIndicators.forEach((indicator, index) => {
         indicator.addEventListener('dragover', function(e) {
             e.preventDefault();
             this.classList.add('active');
         });
-        
+
         indicator.addEventListener('dragleave', function(e) {
             this.classList.remove('active');
         });
-        
+
         indicator.addEventListener('drop', function(e) {
             e.preventDefault();
             this.classList.remove('active');
-            
+
             const data = JSON.parse(e.dataTransfer.getData('application/json') || '{}');
             if (data.type === 'reorder') {
                 reorderField(data.fieldId, index);
@@ -236,6 +360,14 @@ function setupFieldDragDrop() {
 }
 
 function addField(type) {
+    // Prevent duplicate calls
+    if (window.addingField) return;
+    window.addingField = true;
+
+    setTimeout(() => {
+        window.addingField = false;
+    }, 100);
+
     fieldCounter++;
     const fieldId = `field_${fieldCounter}`;
 
@@ -459,12 +591,12 @@ function reorderField(fieldId, newPosition) {
 function refreshFormBuilder() {
     const formFieldsArea = document.getElementById('formFields');
     formFieldsArea.innerHTML = '';
-    
+
     if (formFields.length === 0) {
         formFieldsArea.innerHTML = '<h5 class="text-muted">Drag fields here to build your form</h5>';
         return;
     }
-    
+
     formFields.forEach(field => {
         renderField(field);
     });

@@ -94,6 +94,45 @@ class FieldController extends Controller
 
         return view('dynamicform::partials.field-palette', compact('fieldTypes'));
     }
+    
+    public function getFieldPalette()
+    {
+        // Get custom field types from database
+        $customFields = \App\Modules\DynamicForm\Models\FieldType::where('is_active', true)->get();
+        
+        $fieldTypes = [
+            ['type' => 'text', 'label' => 'Text Input', 'icon' => 'fas fa-font'],
+            ['type' => 'email', 'label' => 'Email', 'icon' => 'fas fa-envelope'],
+            ['type' => 'tel', 'label' => 'Phone', 'icon' => 'fas fa-phone'],
+            ['type' => 'number', 'label' => 'Number', 'icon' => 'fas fa-hashtag'],
+            ['type' => 'textarea', 'label' => 'Textarea', 'icon' => 'fas fa-align-left'],
+            ['type' => 'date', 'label' => 'Date', 'icon' => 'fas fa-calendar'],
+            ['type' => 'select', 'label' => 'Select', 'icon' => 'fas fa-list'],
+            ['type' => 'radio', 'label' => 'Radio', 'icon' => 'fas fa-dot-circle'],
+            ['type' => 'checkbox', 'label' => 'Checkbox', 'icon' => 'fas fa-check-square'],
+            ['type' => 'file', 'label' => 'File Upload', 'icon' => 'fas fa-file']
+        ];
+        
+        // Add custom field types
+        foreach($customFields as $custom) {
+            $fieldTypes[] = [
+                'type' => $custom->name,
+                'label' => $custom->label,
+                'icon' => $custom->icon
+            ];
+        }
+        
+        $html = '<div class="field-palette-grid">';
+        foreach($fieldTypes as $field) {
+            $html .= '<div class="field-card" draggable="true" data-type="' . $field['type'] . '" title="Drag to add ' . $field['label'] . '">';
+            $html .= '<div class="field-icon"><i class="' . $field['icon'] . '"></i></div>';
+            $html .= '<div class="field-name">' . $field['label'] . '</div>';
+            $html .= '</div>';
+        }
+        $html .= '</div>';
+        
+        return response()->json(['html' => $html]);
+    }
 
     public function getFieldHtml($type, $config = [])
     {

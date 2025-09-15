@@ -44,6 +44,23 @@
                     ],
                 ],
             ],
+             [
+                'title' => 'Form Manage',
+                'icon' => 'fas fa-user amd-icon-color2',
+                'iconColor' => 'icon-color-7',
+                'submenu' => [
+                        [
+                        'title' => 'field types Form',
+                        'route' => 'field-types.index',
+                        'route_pattern' => 'field-types.*',
+                    ],
+                    [
+                        'title' => 'Dynamic Form',
+                        'route' => 'forms.index',
+                        'route_pattern' => 'forms.*',
+                    ],
+                ],
+            ],
         ];
     @endphp
 

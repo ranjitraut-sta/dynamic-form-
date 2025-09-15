@@ -12,7 +12,8 @@ class Form extends Model
         'description',
         'fields',
         'settings',
-        'is_active'
+        'is_active',
+        'unique_url'
     ];
 
     protected $casts = [
