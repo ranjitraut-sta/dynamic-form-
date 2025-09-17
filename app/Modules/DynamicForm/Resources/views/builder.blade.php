@@ -94,6 +94,59 @@
         </div>
     </div>
 
+    <!-- Templates Modal -->
+    <div class="modal fade" id="templatesModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Choose Template</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row" id="templatesGrid">
+                        <!-- Templates will load here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conditional Logic Modal -->
+    <div class="modal fade" id="conditionalModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Conditional Logic</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="conditionalLogicContent">
+                    <!-- Logic builder -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="saveConditionalLogic()">Save Logic</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Settings Modal -->
+    <div class="modal fade" id="settingsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Form Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="formSettingsContent">
+                    <!-- Settings form -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="saveFormSettings()">Save Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Preview Modal -->
     <div class="modal fade" id="previewModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
@@ -217,6 +270,31 @@
         color: #6c757d;
         margin-bottom: 10px;
     }
+
+    .drag-handle {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: grab;
+        color: #6c757d;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+
+    .form-field:hover .drag-handle {
+        opacity: 1;
+    }
+
+    .drop-zone-active {
+        border: 2px dashed #0d6efd !important;
+        background: rgba(13,110,253,0.05) !important;
+    }
+
+    .field-item.dragging {
+        opacity: 0.5;
+        transform: rotate(5deg);
+    }
     </style>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -290,18 +368,46 @@
         fieldItems.forEach(item => {
             item.addEventListener('dragstart', function(e) {
                 e.dataTransfer.setData('text/plain', this.dataset.type);
+                this.style.opacity = '0.5';
+            });
+
+            item.addEventListener('dragend', function(e) {
+                this.style.opacity = '1';
             });
         });
 
         dropZone.addEventListener('dragover', function(e) {
             e.preventDefault();
+            this.classList.add('drop-zone-active');
+        });
+
+        dropZone.addEventListener('dragleave', function(e) {
+            this.classList.remove('drop-zone-active');
         });
 
         dropZone.addEventListener('drop', function(e) {
             e.preventDefault();
+            this.classList.remove('drop-zone-active');
             const fieldType = e.dataTransfer.getData('text/plain');
             if (fieldType) {
                 addField(fieldType);
+            }
+        });
+
+        // Make existing fields sortable
+        setupFieldSorting();
+    }
+
+    function setupFieldSorting() {
+        const formFields = document.getElementById('formFields');
+
+        // Add drag handles to existing fields
+        document.querySelectorAll('.form-field').forEach(field => {
+            if (!field.querySelector('.drag-handle')) {
+                const dragHandle = document.createElement('div');
+                dragHandle.className = 'drag-handle';
+                dragHandle.innerHTML = '<i class="fas fa-grip-vertical"></i>';
+                field.appendChild(dragHandle);
             }
         });
     }
@@ -330,6 +436,10 @@
             name: fieldId,
             placeholder: '',
             required: false,
+            minlength: '',
+            maxlength: '',
+            accept: '',
+            multiple: false,
             options: (type === 'select' || type === 'radio' || type === 'checkbox') ? ['Option 1', 'Option 2'] : null
         };
 
@@ -344,6 +454,9 @@
         const formFieldsArea = document.getElementById('formFields');
         const fieldHtml = `
             <div class="form-field" data-field-id="${field.id}" onclick="selectField('${field.id}')">
+                <div class="drag-handle">
+                    <i class="fas fa-grip-vertical"></i>
+                </div>
                 <div class="field-controls">
                     <button type="button" class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); duplicateField('${field.id}')" title="Duplicate">
                         <i class="fas fa-copy"></i>
@@ -359,6 +472,22 @@
             </div>
         `;
         formFieldsArea.insertAdjacentHTML('beforeend', fieldHtml);
+    }
+
+    function duplicateField(fieldId) {
+        const originalField = formFields.find(f => f.id === fieldId);
+        fieldCounter++;
+        const newFieldId = `field_${fieldCounter}`;
+
+        const newField = {
+            ...originalField,
+            id: newFieldId,
+            name: newFieldId
+        };
+
+        formFields.push(newField);
+        renderField(newField);
+        selectField(newFieldId);
     }
 
     function generateFieldPreview(field) {
@@ -402,42 +531,176 @@
     function showFieldProperties(field) {
         const propertiesPanel = document.getElementById('fieldProperties');
 
-        propertiesPanel.innerHTML = `
+        let propertiesHtml = `
             <div class="properties-group">
-                <h6>Basic</h6>
+                <h6>Basic Properties</h6>
                 <div class="mb-3">
-                    <label class="form-label">Label</label>
-                    <input type="text" class="form-control" value="${field.label}" onchange="updateField('label', this.value)">
+                    <label class="form-label">Field Label</label>
+                    <input type="text" class="form-control" id="prop-label" value="${field.label}">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Placeholder</label>
-                    <input type="text" class="form-control" value="${field.placeholder || ''}" onchange="updateField('placeholder', this.value)">
+                    <label class="form-label">Field Name</label>
+                    <input type="text" class="form-control" id="prop-name" value="${field.name}">
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" ${field.required ? 'checked' : ''} onchange="updateField('required', this.checked)">
+                    <input class="form-check-input" type="checkbox" id="prop-required" ${field.required ? 'checked' : ''}>
                     <label class="form-check-label">Required field</label>
                 </div>
             </div>
-
-            ${field.options ? `
-            <div class="properties-group">
-                <h6>Options</h6>
-                <div id="optionsList">
-                    ${field.options.map((opt, i) => `
-                        <div class="input-group mb-2">
-                            <input type="text" class="form-control" value="${opt}" onchange="updateOption(${i}, this.value)">
-                            <button class="btn btn-outline-danger" onclick="removeOption(${i})">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    `).join('')}
-                </div>
-                <button class="btn btn-sm btn-outline-primary" onclick="addOption()">
-                    <i class="fas fa-plus"></i> Add Option
-                </button>
-            </div>
-            ` : ''}
         `;
+
+        // Field-specific properties
+        if (['text', 'email', 'tel', 'number', 'textarea'].includes(field.type)) {
+            propertiesHtml += `
+                <div class="properties-group">
+                    <h6>Input Properties</h6>
+                    <div class="mb-3">
+                        <label class="form-label">Placeholder Text</label>
+                        <input type="text" class="form-control" id="prop-placeholder" value="${field.placeholder || ''}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Min Length</label>
+                        <input type="number" class="form-control" id="prop-minlength" value="${field.minlength || ''}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Max Length</label>
+                        <input type="number" class="form-control" id="prop-maxlength" value="${field.maxlength || ''}">
+                    </div>
+                </div>
+            `;
+        }
+
+        // Options for select/radio/checkbox
+        if (field.options) {
+            propertiesHtml += `
+                <div class="properties-group">
+                    <h6>Options</h6>
+                    <div id="optionsList">
+                        ${field.options.map((opt, i) => `
+                            <div class="input-group mb-2" data-option-index="${i}">
+                                <input type="text" class="form-control option-input" value="${opt}">
+                                <button class="btn btn-outline-danger remove-option" type="button">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button class="btn btn-sm btn-outline-primary" id="add-option">
+                        <i class="fas fa-plus"></i> Add Option
+                    </button>
+                </div>
+            `;
+        }
+
+        // File upload properties
+        if (field.type === 'file') {
+            propertiesHtml += `
+                <div class="properties-group">
+                    <h6>File Properties</h6>
+                    <div class="mb-3">
+                        <label class="form-label">Accepted File Types</label>
+                        <input type="text" class="form-control" id="prop-accept" value="${field.accept || ''}" placeholder=".jpg,.png,.pdf">
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="prop-multiple" ${field.multiple ? 'checked' : ''}>
+                        <label class="form-check-label">Allow multiple files</label>
+                    </div>
+                </div>
+            `;
+        }
+
+        propertiesPanel.innerHTML = propertiesHtml;
+
+        // Add event listeners
+        setupPropertyListeners();
+    }
+
+    function setupPropertyListeners() {
+        // Basic properties
+        const labelInput = document.getElementById('prop-label');
+        if (labelInput) {
+            labelInput.addEventListener('input', function() {
+                updateField('label', this.value);
+            });
+        }
+
+        const nameInput = document.getElementById('prop-name');
+        if (nameInput) {
+            nameInput.addEventListener('input', function() {
+                updateField('name', this.value);
+            });
+        }
+
+        const requiredInput = document.getElementById('prop-required');
+        if (requiredInput) {
+            requiredInput.addEventListener('change', function() {
+                updateField('required', this.checked);
+            });
+        }
+
+        // Input properties
+        const placeholderInput = document.getElementById('prop-placeholder');
+        if (placeholderInput) {
+            placeholderInput.addEventListener('input', function() {
+                updateField('placeholder', this.value);
+            });
+        }
+
+        const minlengthInput = document.getElementById('prop-minlength');
+        if (minlengthInput) {
+            minlengthInput.addEventListener('input', function() {
+                updateField('minlength', this.value);
+            });
+        }
+
+        const maxlengthInput = document.getElementById('prop-maxlength');
+        if (maxlengthInput) {
+            maxlengthInput.addEventListener('input', function() {
+                updateField('maxlength', this.value);
+            });
+        }
+
+        // File properties
+        const acceptInput = document.getElementById('prop-accept');
+        if (acceptInput) {
+            acceptInput.addEventListener('input', function() {
+                updateField('accept', this.value);
+            });
+        }
+
+        const multipleInput = document.getElementById('prop-multiple');
+        if (multipleInput) {
+            multipleInput.addEventListener('change', function() {
+                updateField('multiple', this.checked);
+            });
+        }
+
+        // Options management
+        const optionInputs = document.querySelectorAll('.option-input');
+        optionInputs.forEach((input, index) => {
+            input.addEventListener('input', function() {
+                selectedField.options[index] = this.value;
+                refreshField(selectedField.id);
+            });
+        });
+
+        const removeButtons = document.querySelectorAll('.remove-option');
+        removeButtons.forEach((button, index) => {
+            button.addEventListener('click', function() {
+                selectedField.options.splice(index, 1);
+                showFieldProperties(selectedField);
+                refreshField(selectedField.id);
+            });
+        });
+
+        const addButton = document.getElementById('add-option');
+        if (addButton) {
+            addButton.addEventListener('click', function() {
+                selectedField.options.push('New Option');
+                showFieldProperties(selectedField);
+                refreshField(selectedField.id);
+            });
+        }
     }
 
     function updateField(property, value) {

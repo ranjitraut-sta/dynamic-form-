@@ -47,7 +47,7 @@
                                         @case('textarea')
                                             <textarea
                                                 class="form-control"
-                                                name="{{ $field['name'] }}"
+                                                name="{{ $field['name'] ?? $field['id'] }}"
                                                 placeholder="{{ $field['placeholder'] ?? 'Enter ' . strtolower($field['label']) }}"
                                                 rows="3"
                                                 {{ ($field['required'] ?? false) ? 'required' : '' }}>
@@ -55,7 +55,7 @@
                                             @break
 
                                         @case('select')
-                                            <select class="form-control" name="{{ $field['name'] }}" {{ ($field['required'] ?? false) ? 'required' : '' }}>
+                                            <select class="form-control" name="{{ $field['name'] ?? $field['id'] }}" {{ ($field['required'] ?? false) ? 'required' : '' }}>
                                                 <option value="">Choose...</option>
                                                 @if(isset($field['options']))
                                                     @foreach($field['options'] as $option)
@@ -69,7 +69,7 @@
                                             @if(isset($field['options']))
                                                 @foreach($field['options'] as $option)
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="{{ $field['name'] }}" value="{{ $option }}" {{ ($field['required'] ?? false) ? 'required' : '' }}>
+                                                        <input class="form-check-input" type="radio" name="{{ $field['name'] ?? $field['id'] }}" value="{{ $option }}" {{ ($field['required'] ?? false) ? 'required' : '' }}>
                                                         <label class="form-check-label">{{ $option }}</label>
                                                     </div>
                                                 @endforeach
@@ -80,7 +80,7 @@
                                             @if(isset($field['options']))
                                                 @foreach($field['options'] as $option)
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" name="{{ $field['name'] }}[]" value="{{ $option }}">
+                                                        <input class="form-check-input" type="checkbox" name="{{ $field['name'] ?? $field['id'] }}[]" value="{{ $option }}">
                                                         <label class="form-check-label">{{ $option }}</label>
                                                     </div>
                                                 @endforeach
@@ -91,7 +91,7 @@
                                             <input
                                                 type="date"
                                                 class="form-control"
-                                                name="{{ $field['name'] }}"
+                                                name="{{ $field['name'] ?? $field['id'] }}"
                                                 {{ ($field['required'] ?? false) ? 'required' : '' }}>
                                             @break
 
@@ -99,7 +99,7 @@
                                             <input
                                                 type="tel"
                                                 class="form-control"
-                                                name="{{ $field['name'] }}"
+                                                name="{{ $field['name'] ?? $field['id'] }}"
                                                 placeholder="{{ $field['placeholder'] ?? 'Enter phone number' }}"
                                                 {{ ($field['required'] ?? false) ? 'required' : '' }}>
                                             @break
@@ -108,7 +108,7 @@
                                             <input
                                                 type="email"
                                                 class="form-control"
-                                                name="{{ $field['name'] }}"
+                                                name="{{ $field['name'] ?? $field['id'] }}"
                                                 placeholder="{{ $field['placeholder'] ?? 'Enter email address' }}"
                                                 {{ ($field['required'] ?? false) ? 'required' : '' }}>
                                             @break
@@ -117,7 +117,7 @@
                                             <input
                                                 type="number"
                                                 class="form-control"
-                                                name="{{ $field['name'] }}"
+                                                name="{{ $field['name'] ?? $field['id'] }}"
                                                 placeholder="{{ $field['placeholder'] ?? 'Enter number' }}"
                                                 {{ ($field['required'] ?? false) ? 'required' : '' }}>
                                             @break
@@ -126,7 +126,7 @@
                                             <input
                                                 type="file"
                                                 class="form-control"
-                                                name="{{ $field['name'] }}"
+                                                name="{{ $field['name'] ?? $field['id'] }}"
                                                 {{ ($field['required'] ?? false) ? 'required' : '' }}>
                                             @break
 
@@ -134,7 +134,7 @@
                                             <input
                                                 type="text"
                                                 class="form-control"
-                                                name="{{ $field['name'] }}"
+                                                name="{{ $field['name'] ?? $field['id'] }}"
                                                 placeholder="{{ $field['placeholder'] ?? 'Enter ' . strtolower($field['label']) }}"
                                                 {{ ($field['required'] ?? false) ? 'required' : '' }}>
                                     @endswitch

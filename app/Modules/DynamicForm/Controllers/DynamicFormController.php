@@ -12,27 +12,34 @@ class DynamicFormController extends Controller
 {
     public function index()
     {
-        $forms = Form::latest()->paginate(10);
-        return view('dynamicform::index', compact('forms'));
+        $forms = Form::with('submissions')
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->paginate(12);
+        return view('dynamicform::workspace-index', compact('forms'));
     }
 
     public function create()
     {
-        return view('dynamicform::builder');
+        return view('dynamicform::template-wizard');
     }
 
     public function store(Request $request)
     {
-        $form = Form::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'fields' => $request->fields,
-            'settings' => $request->settings ?? [],
-            'is_active' => $request->boolean('is_active', true),
-            'unique_url' => $this->generateUniqueUrl()
-        ]);
+        try {
+            $form = Form::create([
+                'user_id' => auth()->id(),
+                'title' => $request->title ?? 'Untitled Form',
+                'description' => $request->description ?? '',
+                'fields' => $request->fields ?? [],
+                'settings' => $request->settings ?? [],
+                'is_active' => true
+            ]);
 
-        return response()->json(['success' => true, 'form' => $form]);
+            return response()->json(['success' => true, 'form' => $form]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     private function generateUniqueUrl()
@@ -46,8 +53,21 @@ class DynamicFormController extends Controller
 
     public function show(Form $form)
     {
-        $submissions = $form->submissions()->latest()->paginate(10);
-        return view('dynamicform::show', compact('form', 'submissions'));
+        if ($form->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized');
+        }
+        
+        return view('dynamicform::show', compact('form'));
+    }
+
+    public function submissions(Form $form)
+    {
+        if ($form->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized');
+        }
+        
+        $submissions = $form->submissions()->latest()->paginate(15);
+        return view('dynamicform::submissions', compact('form', 'submissions'));
     }
 
     public function publicForm(Form $form,$formId)
@@ -60,11 +80,19 @@ class DynamicFormController extends Controller
 
     public function edit(Form $form)
     {
+        if ($form->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized');
+        }
+        
         return view('dynamicform::builder', compact('form'));
     }
 
     public function update(Request $request, Form $form)
     {
+        if ($form->user_id !== auth()->id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+        
         $form->update([
             'title' => $request->title,
             'description' => $request->description,
@@ -78,6 +106,10 @@ class DynamicFormController extends Controller
 
     public function destroy(Form $form)
     {
+        if ($form->user_id !== auth()->id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+        
         $form->delete();
         return response()->json(['success' => true]);
     }
@@ -121,5 +153,43 @@ class DynamicFormController extends Controller
     {
         $submission->delete();
         return response()->json(['success' => true, 'message' => 'Submission deleted successfully']);
+    }
+    public function deleteSingleSubmission(FormSubmission $submission, $submissionId)
+    {
+        $submission = FormSubmission::find($submissionId);
+        $submission->delete();
+        return response()->json(['success' => true, 'message' => 'Submission deleted successfully']);
+    }
+
+    public function enhancedBuilder(Form $form)
+    {
+        if ($form->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized');
+        }
+        
+        return view('dynamicform::enhanced-builder', compact('form'));
+    }
+
+    public function templateWizard()
+    {
+        return view('dynamicform::template-wizard');
+    }
+
+    public function saveEnhanced(Request $request, Form $form)
+    {
+        if ($form->user_id !== auth()->id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+        
+        $form->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'fields' => $request->fields,
+            'conditional_logic' => $request->conditional_logic,
+            'form_settings' => $request->form_settings,
+            'is_active' => true
+        ]);
+
+        return response()->json(['success' => true, 'form' => $form]);
     }
 }
