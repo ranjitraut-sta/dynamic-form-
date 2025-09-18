@@ -3,6 +3,7 @@
 namespace App\Modules\DynamicForm\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\DynamicForm\Models\FieldType;
 
 class FieldController extends Controller
 {
@@ -94,12 +95,12 @@ class FieldController extends Controller
 
         return view('dynamicform::partials.field-palette', compact('fieldTypes'));
     }
-    
+
     public function getFieldPalette()
     {
         // Get custom field types from database
-        $customFields = \App\Modules\DynamicForm\Models\FieldType::where('is_active', true)->get();
-        
+        $customFields = FieldType::where('is_active', true)->get();
+
         $fieldTypes = [
             ['type' => 'text', 'label' => 'Text Input', 'icon' => 'fas fa-font'],
             ['type' => 'email', 'label' => 'Email', 'icon' => 'fas fa-envelope'],
@@ -112,7 +113,7 @@ class FieldController extends Controller
             ['type' => 'checkbox', 'label' => 'Checkbox', 'icon' => 'fas fa-check-square'],
             ['type' => 'file', 'label' => 'File Upload', 'icon' => 'fas fa-file']
         ];
-        
+
         // Add custom field types
         foreach($customFields as $custom) {
             $fieldTypes[] = [
@@ -121,7 +122,7 @@ class FieldController extends Controller
                 'icon' => $custom->icon
             ];
         }
-        
+
         $html = '<div class="field-palette-grid">';
         foreach($fieldTypes as $field) {
             $html .= '<div class="field-card" draggable="true" data-type="' . $field['type'] . '" title="Drag to add ' . $field['label'] . '">';
@@ -130,7 +131,7 @@ class FieldController extends Controller
             $html .= '</div>';
         }
         $html .= '</div>';
-        
+
         return response()->json(['html' => $html]);
     }
 

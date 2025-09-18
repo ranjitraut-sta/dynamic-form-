@@ -52,6 +52,7 @@
                                                 rows="3"
                                                 {{ ($field['required'] ?? false) ? 'required' : '' }}>
                                             </textarea>
+                                            <div class="error-message text-danger small mt-1" style="display: none;"></div>
                                             @break
 
                                         @case('select')
@@ -63,6 +64,7 @@
                                                     @endforeach
                                                 @endif
                                             </select>
+                                            <div class="error-message text-danger small mt-1" style="display: none;"></div>
                                             @break
 
                                         @case('radio')
@@ -74,6 +76,7 @@
                                                     </div>
                                                 @endforeach
                                             @endif
+                                            <div class="error-message text-danger small mt-1" style="display: none;"></div>
                                             @break
 
                                         @case('checkbox')
@@ -85,6 +88,7 @@
                                                     </div>
                                                 @endforeach
                                             @endif
+                                            <div class="error-message text-danger small mt-1" style="display: none;"></div>
                                             @break
 
                                         @case('date')
@@ -93,6 +97,7 @@
                                                 class="form-control"
                                                 name="{{ $field['name'] ?? $field['id'] }}"
                                                 {{ ($field['required'] ?? false) ? 'required' : '' }}>
+                                            <div class="error-message text-danger small mt-1" style="display: none;"></div>
                                             @break
 
                                         @case('tel')
@@ -102,6 +107,7 @@
                                                 name="{{ $field['name'] ?? $field['id'] }}"
                                                 placeholder="{{ $field['placeholder'] ?? 'Enter phone number' }}"
                                                 {{ ($field['required'] ?? false) ? 'required' : '' }}>
+                                            <div class="error-message text-danger small mt-1" style="display: none;"></div>
                                             @break
 
                                         @case('email')
@@ -111,6 +117,7 @@
                                                 name="{{ $field['name'] ?? $field['id'] }}"
                                                 placeholder="{{ $field['placeholder'] ?? 'Enter email address' }}"
                                                 {{ ($field['required'] ?? false) ? 'required' : '' }}>
+                                            <div class="error-message text-danger small mt-1" style="display: none;"></div>
                                             @break
 
                                         @case('number')
@@ -120,6 +127,7 @@
                                                 name="{{ $field['name'] ?? $field['id'] }}"
                                                 placeholder="{{ $field['placeholder'] ?? 'Enter number' }}"
                                                 {{ ($field['required'] ?? false) ? 'required' : '' }}>
+                                            <div class="error-message text-danger small mt-1" style="display: none;"></div>
                                             @break
 
                                         @case('file')
@@ -128,6 +136,7 @@
                                                 class="form-control"
                                                 name="{{ $field['name'] ?? $field['id'] }}"
                                                 {{ ($field['required'] ?? false) ? 'required' : '' }}>
+                                            <div class="error-message text-danger small mt-1" style="display: none;"></div>
                                             @break
 
                                         @default
@@ -137,6 +146,7 @@
                                                 name="{{ $field['name'] ?? $field['id'] }}"
                                                 placeholder="{{ $field['placeholder'] ?? 'Enter ' . strtolower($field['label']) }}"
                                                 {{ ($field['required'] ?? false) ? 'required' : '' }}>
+                                            <div class="error-message text-danger small mt-1" style="display: none;"></div>
                                     @endswitch
                                 </div>
                             @endforeach
@@ -158,7 +168,20 @@
         document.getElementById('dynamicForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
+            // Clear previous errors
+            document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+                el.textContent = '';
+            });
+
             const formData = new FormData(this);
+            
+            // Debug: Log form data being sent
+            console.log('Form data being sent:');
+            for (let [key, value] of formData.entries()) {
+                console.log(key, value);
+            }
 
             fetch(this.action, {
                 method: 'POST',
@@ -167,18 +190,65 @@
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log('Response status:', response.status);
+                const contentType = response.headers.get('content-type');
+                console.log('Content type:', contentType);
+                
+                if (response.status === 422) {
+                    return response.json().then(data => {
+                        console.log('Validation errors:', data.errors);
+                        throw { validation: true, errors: data.errors };
+                    });
+                }
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                // Check if response is JSON
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json();
+                } else {
+                    // If HTML response, log it for debugging
+                    return response.text().then(html => {
+                        console.log('HTML response received:', html.substring(0, 500));
+                        throw new Error('Server returned HTML instead of JSON');
+                    });
+                }
+            })
             .then(data => {
+                console.log('Success response:', data);
                 if (data.success) {
                     alert('Form submitted successfully!');
                     this.reset();
                 } else {
-                    alert('Error submitting form');
+                    alert('Form submission failed');
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('Error submitting form');
+                console.log('Caught error:', error);
+                if (error.validation && error.errors) {
+                    console.log('Processing validation errors:', error.errors);
+                    // Display validation errors
+                    Object.keys(error.errors).forEach(fieldName => {
+                        console.log(`Processing field: ${fieldName}`);
+                        const field = document.querySelector(`[name="${fieldName}"], [name="${fieldName}[]"]`);
+                        console.log('Found field:', field);
+                        if (field) {
+                            field.classList.add('is-invalid');
+                            const errorContainer = field.parentNode.querySelector('.error-message');
+                            console.log('Found error container:', errorContainer);
+                            if (errorContainer) {
+                                errorContainer.textContent = error.errors[fieldName][0];
+                                errorContainer.style.display = 'block';
+                            }
+                        }
+                    });
+                } else {
+                    console.error('Non-validation error:', error);
+                    alert('Error submitting form: ' + (error.message || 'Unknown error'));
+                }
             });
         });
     </script>

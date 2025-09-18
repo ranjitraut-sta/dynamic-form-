@@ -5,6 +5,7 @@ namespace App\Modules\DynamicForm\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\DynamicForm\Models\Form;
 use App\Modules\DynamicForm\Models\FormSubmission;
+use App\Modules\DynamicForm\Helpers\FormValidationHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -26,14 +27,21 @@ class DynamicFormController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'fields' => 'nullable|array',
+        ]);
+
         try {
             $form = Form::create([
                 'user_id' => auth()->id(),
-                'title' => $request->title ?? 'Untitled Form',
-                'description' => $request->description ?? '',
+                'title' => $request->title,
+                'description' => $request->description,
                 'fields' => $request->fields ?? [],
                 'settings' => $request->settings ?? [],
-                'is_active' => true
+                'unique_url' => $this->generateUniqueUrl(),
+                'is_active' => false
             ]);
 
             return response()->json(['success' => true, 'form' => $form]);
@@ -56,7 +64,7 @@ class DynamicFormController extends Controller
         if ($form->user_id !== auth()->id()) {
             abort(403, 'Unauthorized');
         }
-        
+
         return view('dynamicform::show', compact('form'));
     }
 
@@ -65,7 +73,7 @@ class DynamicFormController extends Controller
         if ($form->user_id !== auth()->id()) {
             abort(403, 'Unauthorized');
         }
-        
+
         $submissions = $form->submissions()->latest()->paginate(15);
         return view('dynamicform::submissions', compact('form', 'submissions'));
     }
@@ -83,7 +91,7 @@ class DynamicFormController extends Controller
         if ($form->user_id !== auth()->id()) {
             abort(403, 'Unauthorized');
         }
-        
+
         return view('dynamicform::builder', compact('form'));
     }
 
@@ -92,7 +100,13 @@ class DynamicFormController extends Controller
         if ($form->user_id !== auth()->id()) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
-        
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'fields' => 'nullable|array',
+        ]);
+
         $form->update([
             'title' => $request->title,
             'description' => $request->description,
@@ -109,7 +123,7 @@ class DynamicFormController extends Controller
         if ($form->user_id !== auth()->id()) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
-        
+
         $form->delete();
         return response()->json(['success' => true]);
     }
@@ -125,6 +139,12 @@ class DynamicFormController extends Controller
         // Get form by ID
         $form = Form::findOrFail($formId);
 
+        // Generate validation rules dynamically
+        $rules = $this->generateValidationRules($form->fields);
+
+        // Validate the request
+        $request->validate($rules);
+
         FormSubmission::create([
             'form_id' => $form->id,
             'data' => $request->except(['_token', '_method']),
@@ -139,6 +159,16 @@ class DynamicFormController extends Controller
     {
         $form = Form::where('unique_url', $uniqueUrl)->firstOrFail();
 
+        // Generate validation rules dynamically
+        $rules = $this->generateValidationRules($form->fields);
+
+        // Validate the request
+        try {
+            $request->validate($rules);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        }
+
         FormSubmission::create([
             'form_id' => $form->id,
             'data' => $request->except(['_token', '_method']),
@@ -147,6 +177,11 @@ class DynamicFormController extends Controller
         ]);
 
         return response()->json(['success' => true, 'message' => 'Form submitted successfully']);
+    }
+
+    private function generateValidationRules($fields)
+    {
+        return FormValidationHelper::generateRules($fields);
     }
 
     public function deleteSubmission(FormSubmission $submission)
@@ -166,7 +201,7 @@ class DynamicFormController extends Controller
         if ($form->user_id !== auth()->id()) {
             abort(403, 'Unauthorized');
         }
-        
+
         return view('dynamicform::enhanced-builder', compact('form'));
     }
 
@@ -180,7 +215,7 @@ class DynamicFormController extends Controller
         if ($form->user_id !== auth()->id()) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
-        
+
         $form->update([
             'title' => $request->title,
             'description' => $request->description,
